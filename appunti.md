@@ -1,4 +1,4 @@
-#Da fare:
+# Da fare:
 
 * gltf.scene.traverse vedere
 * aggiungere piano/terreno
