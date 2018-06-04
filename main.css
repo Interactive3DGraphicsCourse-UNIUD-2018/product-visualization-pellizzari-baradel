@@ -58,11 +58,11 @@ body {
 
 #canvas {
     position: absolute;
-    width: 70%;
+    width: 933px;
     height: 570px;
     background-color: red;
-    top: 20%;
-    left: 2%;
+    top: 34%;
+    left: 2.6%;
 }
 
 .nav-bar {

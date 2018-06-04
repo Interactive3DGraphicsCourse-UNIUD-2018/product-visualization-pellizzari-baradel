@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secondo Progetto</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="lib/three.js"></script>
+    <script src="lib/stats.min.js"></script>
+</head>
+<body>
+    <div class="container">
+
+        <div class="header">
+            <h1>Titolo Sito</h1>
+            <div class="logo">
+                <p>LOGO</p>
+            </div>
+            <div class="description">
+                <p>Descrizione sito o comunque un qualcosa tipo un'introduzione</p>
+            </div>
+        </div>
+
+        <div class="inner-container"></div>
+            <div id="canvas">
+                    <script>
+                            var scene,
+                            renderer,
+                            camera,
+                            stats,
+                            cube,
+                            pos,
+                            mark;
+                
+                            function Start() {
+                                scene = new THREE.Scene();
+                                //scene.background = new THREE.color(0xff00cc);
+                                camera = new THREE.PerspectiveCamera( 50, 933 / 570, 0.1, 1000 );
+                                renderer = new THREE.WebGLRenderer();
+                        
+                                container = document.getElementById( 'canvas' );
+                                document.body.appendChild( container );
+                        
+                                renderer.setSize(933, 570 );
+                                container.appendChild( renderer.domElement );
+                
+                                var geometry = new THREE.BoxGeometry(1,1,1);
+                                var material = new THREE.MeshBasicMaterial( { color: 0x0033CC, wireframe: true } );
+                                cube = new THREE.Mesh(geometry, material);
+                
+                                scene.add( cube );
+                
+                                stats = new Stats();
+                                stats.domElement.style.position = 'absolute';
+                                stats.domElement.style.top = '0px';
+                                document.body.appendChild( stats.domElement );
+                                camera.position.z = 5;
+                
+                                /* Script per la pressione delle chiavi, sono state usate solo le chiavi
+                                *  dei tasti dirazionali laterali (Destra, Sinistra, A, D);
+                                */
+                
+                                var onKeyDown = function ( event ) {
+                                    switch ( event.keyCode ) {
+                
+                                        case 37: // left
+                                        case 65: // a
+                                            moveToRight = false;
+                                            moveToLeft = true;
+                                            break;
+                
+                                        case 39: // right
+                                        case 68: // d
+                                            moveToLeft = false;
+                                            moveToRight = true;
+                                            break;
+                                    }
+                                };
+                
+                                document.addEventListener( 'keydown', onKeyDown);
+                
+                                moveToLeft = false;
+                                moveToRight = false;
+                
+                            }
+                
+                                function Render() {
+                                    requestAnimationFrame(Render);
+                                stats.update();
+                
+                                    if(moveToLeft){
+                                        moveCube(cube, -1);
+                                    }
+                                    if(moveToRight){
+                                        moveCube(cube, 1);
+                                    }
+                
+                                renderer.render(scene, camera);
+                                    cube.rotateY(0.01);
+                                }
+                
+                                //Questa funzione muove il cubo finchè non raggiunge una determinata posizione, il moltiplicatore serve per determinare immediatamente la direzione;
+                                function moveCube(cube, moltiplicatore){
+                                    if(cube.position.x >= 2 || cube.position.x <= -2){
+                                        moveToLeft = false;
+                                        moveToRight = false;
+                                        cube.position.x += 0.02 * moltiplicatore;
+                                    }
+                                    cube.position.x += 0.02 * moltiplicatore;
+                                    }
+                
+                                Start();
+                                Render();
+                        </script>
+            </div>
+            <div class="nav-bar">
+                <h2>Barra di navigazione</h2>
+                <ul>
+                    <li>Cambio oggetti a caso
+                        <ul>
+                            <li class="inner-list">Spada 1</li>
+                            <li class="inner-list">Spada 2</li>
+                            <li class="inner-list">Angioletto</li>
+                        </ul>
+                    </li>
+                    <li>Cambio Materiali
+                        <ul>
+                            <li class="inner-list">Legno</li>
+                            <li class="inner-list">Ferro</li>
+                            <li class="inner-list">Oro</li>
+                            <li class="inner-list">Altri...</li>
+                        </ul>
+                    </li>
+                    <li>Cambio Colori
+                        <li class="inner-list">Rosso</li>
+                        <li class="inner-list">Verde</li>
+                        <li class="inner-list">Blu</li>
+                        <li class="inner-list">Altro...</li>
+                    </li>
+                </ul>
+
+                <p>Oppure una table</p>
+                <table>
+                    <tr>
+                        <td colspan="3">Oggetti</td>
+                    </tr>
+                    <tr>
+                        <td>Spada 1</td>
+                        <td>Spada 2</td>
+                        <td>Spada 3</td>
+                    </tr>
+
+                    <tr></tr>
+                    <tr>
+                        <td colspan="4">Materiali</td>
+                    </tr>
+                    <tr> 
+                        <td>Legno</td>
+                        <td>Ferro</td>
+                        <td>Oro</td>
+                        <td>Altri</td>
+                    </tr>
+                    <tr></tr>
+                    <tr>
+                        <td colspan="5">Colori</td>
+                    </tr>
+                    <tr>
+                        <td>Rosso</td>
+                        <td>Verde</td>
+                        <td>Blue</td>
+                        <td>Giallo</td>
+                        <td>Selettore di colore</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="under-text">
+                <p>Qua eventuali altri comandi o altre opzioni, magari si possono mettere qua i colori e i materiali invece che a destra e lì si lascia solo per gli oggetti, in modo da mettere una sorta di immagine di preview.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
