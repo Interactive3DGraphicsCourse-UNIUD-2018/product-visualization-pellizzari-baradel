@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js webgl - glTF loader</title>
+		<title>Secondo progetto interactive 3D graphics</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
@@ -29,67 +29,143 @@
 	</head>
 
 	<body>
-
+		
+		<!-- librerie js -->
+		
 		<script src="lib/three.js"></script>
-
 		<script src="lib/OrbitControls.js"></script>
 		<script src="lib/GLTFLoader.js"></script>
-
 		<script src="lib/Detector.js"></script>
 		<script src="lib/stats.min.js"></script>
+		
+		<!-- shader -->
+		
+		<script type="text/x-glsl" id="vertex">
+			varying vec3 vNormal;
+			varying vec3 vPosition;
+
+			void main() {
+				vec4 vPos = modelViewMatrix * vec4( position, 1.0 );
+				vPosition = vPos.xyz;
+				vNormal = normalMatrix * normal;
+				gl_Position = projectionMatrix * vPos;
+			}
+		</script>
+
+		<script type="text/x-glsl" id="fragment">
+			varying vec3 vNormal;
+			varying vec3 vPosition;
+			uniform vec3 pointLightPosition; // in world space
+			uniform vec3 clight;
+			uniform vec3 cdiff;
+			const float PI = 3.14159;
+
+			void main() {
+				vec4 lPosition = viewMatrix * vec4( pointLightPosition, 1.0 );
+				vec3 l = normalize(lPosition.xyz - vPosition.xyz);
+				vec3 n = normalize( vNormal );  // interpolation destroys normalization, so we have to normalize
+				float nDotl = max(dot( n, l ),0.0);
+				// formula would be:
+				// outRadiance = clight * PI * cdiff/PI * nDotl, the two PI cancel out
+				vec3 outRadiance = clight * nDotl * cdiff;
+				// gamma encode the final value
+				gl_FragColor = vec4(pow( outRadiance, vec3(1.0/2.2)), 1.0);
+			}
+		</script>
+		
+		<!-- scena three.js -->
 
 		<script>
-			// if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+		
+			// controllo che il browser supporti WebGL
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();  // se non lo supporta invio un messaggio
+			
+			// variabili globali
 			var container, stats, controls;
-			var camera, scene, renderer, light;
-			init();
-			animate();
+			var camera, scene, renderer;
+			
+			// uniforms da passare agli shader (lucePuntuale)
+			var uniforms = {
+						cdiff:	{ type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) }, // TODO prova
+						pointLightPosition:	{ type: "v3", value: new THREE.Vector3() },
+						clight:	{ type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) }, // TODO prova
+			};
+			
+			// contenuto degli shader
+			vs = document.getElementById("vertex").textContent;
+			fs = document.getElementById("fragment").textContent;
+			
 			function init() {
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
 				
-				camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 5000);
-				camera.position.set(0,500,4000);
+				scene = new THREE.Scene();
+				scene.background = new THREE.Color("white");  // TODO temp
+				
+				// configurazione camera
+				camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 600);
+				camera.position.set(0, 3, -20);
 				camera.lookAt(new THREE.Vector3(0,0,0));
+				
+				// aggiungo i controlli
 				controls = new THREE.OrbitControls( camera );
+				// imposto le distanze per lo zoom-in e zoom-out
+				controls.minDistance = 10;
+				controls.maxDistance = 28;		
 				controls.update();
 				
-				scene = new THREE.Scene();
-				scene.background = new THREE.Color("white");  // TEMP
-				light = new THREE.HemisphereLight( 0xbbbbff, 0x444422 );
-				light.position.set( 0, 600, 0 );
-				scene.add( light );
-				// model
+				// rappresentazione geometrica luce puntuale
+				var lucePuntuale = new THREE.Mesh( new THREE.SphereGeometry( 1, 16, 16), new THREE.MeshBasicMaterial ( {color: 0xffff00, wireframe:true} ) );
+				lucePuntuale.position.set( 10.0, 10.0, -10.0 );
+				// aggiorno il valore della posizione della luce puntuale per passarlo allo shader
+				uniforms.pointLightPosition.value = new THREE.Vector3(lucePuntuale.position.x, lucePuntuale.position.y, lucePuntuale.position.z);
+				scene.add(lucePuntuale);
+				
+				// carico il modello
 				var loader = new THREE.GLTFLoader();
 				loader.load( '3df_zephyr_example_0/scene.gltf', function ( gltf ) {
 					gltf.scene.traverse( function ( child ) {
-						if ( child.isMesh ) { // c'era l'envmap
-						console.log(child);
+						if ( child.isMesh ) {
+						// applico lo shader ad ogni figlio
+						child.material =  new THREE.ShaderMaterial({ uniforms: uniforms, vertexShader: vs, fragmentShader: fs });
+						child.material.needsUpdate = true;
+						console.log(child);  // per vedere i dati dei figli
 						}
 					} );
+					// l'oggetto e' molto grande quindi riduco le sue dimensioni per lavorare con valori "accettabili"
+					gltf.scene.scale.multiplyScalar( 0.01 );
+					gltf.scene.position.set(0,0,0);
 					scene.add( gltf.scene );
 				} );
+				
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				renderer.gammaOutput = true;
 				container.appendChild( renderer.domElement );
 				window.addEventListener( 'resize', onWindowResize, false );
+				
 				// stats
 				stats = new Stats();
 				container.appendChild( stats.dom );
-			}
+				
+			} // init()
+			
 			function onWindowResize() {
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
 				renderer.setSize( window.innerWidth, window.innerHeight );
 			}
-			//
+
 			function animate() {
 				requestAnimationFrame( animate );
 				renderer.render( scene, camera );
 				stats.update();
-			}
+			} // animate()
+			
+			init();
+			animate();
+			
 		</script>
 
 	</body>
