@@ -1,6 +1,10 @@
-# Da fare:
+#Da fare:
 
-* gltf.scene.traverse vedere
-* aggiungere piano/terreno
-* aggiungere point light
-* limitare OrbitControls
+## Scena:
+
+* scaricare texture per altri materiali, ad esempio uno in legno (per l'oro non dovrebbe servire)
+* aggiungere piano/terreno (?)
+
+##Pagina html sito:
+
+* provare ad inserire il modello
