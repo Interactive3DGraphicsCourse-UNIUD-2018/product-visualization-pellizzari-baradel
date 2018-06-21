@@ -262,6 +262,9 @@
 			// VARIABILI GLOBALI
 			var container, stats, controls;
 			var camera, scene, renderer;
+			// ASSEGNO UN MATERIALE DI DEFAULT
+			var materiale = "pietra";
+			var uniforms, fs;
 			
 			// CUBEMAP DA TEXTURE
 			var loader = new THREE.CubeTextureLoader(); // TODO se non serve non va caricata -> mettere un controllo
@@ -325,6 +328,9 @@
 				shaderTextureLOD: true // set to use shader texture LOD
 			};
 			
+			// ASSEGNO SUBITO UN VALORE ALLE VARIABILI GLOBALI CHE RIGUARDANO LA SCELTA DEL MATERIALE
+			scegliMateriale();
+			
 			function init() {
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
@@ -348,7 +354,7 @@
 				var lucePuntuale = new THREE.Mesh( new THREE.SphereGeometry( 1, 16, 16), new THREE.MeshBasicMaterial ( {color: 0xffff00, wireframe:true} ) );
 				lucePuntuale.position.set( 10.0, 10.0, -10.0 );
 				// aggiorno il valore della posizione della luce puntuale per passarlo allo shader
-				uniformsOro.pointLightPosition.value = new THREE.Vector3(lucePuntuale.position.x, lucePuntuale.position.y, lucePuntuale.position.z);
+				uniforms.pointLightPosition.value = new THREE.Vector3(lucePuntuale.position.x, lucePuntuale.position.y, lucePuntuale.position.z);
 				scene.add(lucePuntuale);
 				
 				// carico il modello
@@ -357,7 +363,7 @@
 					gltf.scene.traverse( function ( child ) {
 						if ( child.isMesh ) {
 						// applico lo shader ad ogni figlio
-						child.material =  new THREE.ShaderMaterial({ uniforms: uniformsOro, vertexShader: vs, fragmentShader: fsOro, 
+						child.material =  new THREE.ShaderMaterial({ uniforms: uniforms, vertexShader: vs, fragmentShader: fs, 
 						extensions: materialExtensions });
 						child.material.needsUpdate = true;
 						}
@@ -380,6 +386,27 @@
 				container.appendChild( stats.dom );
 				
 			} // init()
+			
+			// TODO questa funzione puo essere chiamata dall'evento onClick passandogli il nome del materiale da impostare
+			function cambiaMateriale(nuovoMateriale){
+				materiale = nuovoMateriale;  // cambio la variabile globale
+				scegliMateriale(); // applico la modifica
+			}
+			
+			// in base al valore della variabile globale materiale (una stringa che contiene il nome del materiale) imposto il valore 
+			// degli uniforms e scelgo lo shader da utilizzare
+			function scegliMateriale(){
+				switch(materiale){
+					case "pietra":
+						uniforms = uniformsPietra;
+						fs = fsPietra;
+						break;
+					case "oro":
+						uniforms = uniformsOro;
+						fs = fsOro;
+						break;
+				}
+			}
 			
 			function onWindowResize() {
 				camera.aspect = window.innerWidth / window.innerHeight;
