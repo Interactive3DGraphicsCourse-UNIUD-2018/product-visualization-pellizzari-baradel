@@ -12,5 +12,15 @@ Test del corretto funzionamento dei file e del giuto rapporto qualità complessi
 
 Aggiunti file html e CSS per la visiualizzazione di un prodotto in un sito generico, è stato creato un sito di prova in modo da rispecchiare un possibile layout e una possibile applicazione reale.
 
+*20 giugno*
+
+Applicati alcuni semplici shader al modello
+
+*21 giugno*
+
+* Inserito uno shader che carica la texture al modello e un paio di luci
+* Trovate alcune environment map per il modello
+* Inserito lo shader per materiale metallico (primo tentativo con l'oro)
+
 ## Fonti
 https://sketchfab.com/
