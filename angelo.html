@@ -38,40 +38,219 @@
 		<script src="lib/Detector.js"></script>
 		<script src="lib/stats.min.js"></script>
 		
-		<!-- shader -->
-		
+		<!-- shader base: carica la texture del modello, una luce puntuale e una ambientale; il vertex va bene per tutti i fragmentshader (per ora) -->
+
 		<script type="text/x-glsl" id="vertex">
 			varying vec3 vNormal;
 			varying vec3 vPosition;
+			varying vec3 wPosition; // world position
+			varying vec2 uVv;  // coordinate delle texture 
 
 			void main() {
 				vec4 vPos = modelViewMatrix * vec4( position, 1.0 );
 				vPosition = vPos.xyz;
 				vNormal = normalMatrix * normal;
+				wPosition = (modelMatrix * vec4( position, 1.0 )).xyz;
+				uVv = uv;
 				gl_Position = projectionMatrix * vPos;
 			}
 		</script>
-
-		<script type="text/x-glsl" id="fragment">
+		
+		<script type="text/x-glsl" id="fragmentPietra">
 			varying vec3 vNormal;
 			varying vec3 vPosition;
+			varying vec3 wPosition;
+			varying vec2 uVv;
 			uniform vec3 pointLightPosition; // in world space
+			uniform vec3 ambientLight;
 			uniform vec3 clight;
-			uniform vec3 cdiff;
+			//uniform samplerCube envMap;
+			//uniform samplerCube IrrEnvMap;
+			uniform sampler2D specularMap;
+			uniform sampler2D diffuseMap;
+			uniform sampler2D roughnessMap;
+			uniform sampler2D normalMap;
+			uniform sampler2D aoMap;
+			uniform vec2 normalScale;
+			uniform vec2 textureRepeat;
+			vec3 cdiff;
+			vec3 cspec;
+			float roughness;
 			const float PI = 3.14159;
+			#extension GL_OES_standard_derivatives : enable
+			
+			vec3 FSchlick(float lDoth) {
+				return (cspec + (vec3(1.0)-cspec)*pow(1.0 - lDoth,5.0));
+			}
+
+			float DGGX(float nDoth, float alpha) {
+				float alpha2 = alpha*alpha;
+				float d = nDoth*nDoth*(alpha2-1.0)+1.0;
+				return (  alpha2 / (PI*d*d));
+			}
+
+			float G1(float dotProduct, float k) {
+				return (dotProduct / (dotProduct*(1.0-k) + k) );
+			}
+
+			float GSmith(float nDotv, float nDotl) {
+				float k = roughness*roughness;
+				return G1(nDotl,k)*G1(nDotv,k);
+			}
+
+			vec3 inverseTransformDirection( in vec3 dir, in mat4 matrix ) {
+				return normalize( ( vec4( dir, 0.0 ) * matrix ).xyz );
+			}
+
+			vec3 perturbNormal2Arb( vec3 eye_pos, vec3 surf_norm ) {
+				vec3 q0 = dFdx( eye_pos.xyz );
+				vec3 q1 = dFdy( eye_pos.xyz );
+				vec2 st0 = dFdx( uVv.st );
+				vec2 st1 = dFdy( uVv.st );
+				vec3 S = normalize(  q0 * st1.t - q1 * st0.t );
+				vec3 T = normalize( -q0 * st1.s + q1 * st0.s );
+				vec3 N =  surf_norm ;
+				vec3 mapN = normalize(texture2D( normalMap, uVv ).xyz * 2.0 - 1.0);
+				mapN.xy = normalScale * mapN.xy;
+				mat3 tsn = mat3( S, T, N );
+				return normalize( tsn * mapN );
+			}
+
+			void main() {
+				vec4 lPosition = viewMatrix * vec4( pointLightPosition, 1.0 );
+				vec3 l = normalize(lPosition.xyz - vPosition.xyz);
+				vec3 n = perturbNormal2Arb( vPosition, normalize( vNormal ));
+				vec3 v = normalize( -vPosition);
+				vec3 h = normalize( v + l);
+				vec3 worldN = inverseTransformDirection( n, viewMatrix );
+				vec3 worldV = cameraPosition - wPosition ;
+				vec3 r = normalize( reflect(-worldV,worldN));
+				// small quantity to prevent divisions by 0
+				float nDotl = max(dot( n, l ),0.000001);
+				float lDoth = max(dot( l, h ),0.000001);
+				float nDoth = max(dot( n, h ),0.000001);
+				float vDoth = max(dot( v, h ),0.000001);
+				float nDotv = max(dot( n, v ),0.000001);
+				cdiff = texture2D( diffuseMap, uVv*textureRepeat ).rgb;
+				// texture in sRGB, linearize
+				cdiff = pow( cdiff, vec3(2.2));
+				cspec = texture2D( specularMap, uVv*textureRepeat ).rgb;
+				// texture in sRGB, linearize
+				cspec = pow( cspec, vec3(2.2));
+				roughness = texture2D( roughnessMap, uVv*textureRepeat).r; // no need to linearize roughness map
+				vec3 fresnel = FSchlick(lDoth);
+				
+				//vec3 irradiance = textureCube( IrrEnvMap, worldN).rgb;
+				// texture in sRGB, linearize
+				//irradiance = pow( irradiance, vec3(2.2));
+				//vec3 outRad = cdiff*irradiance;
+
+				vec3 BRDF = (vec3(1.0)-fresnel)*cdiff/PI + fresnel*GSmith(nDotv,nDotl)*DGGX(nDoth,roughness*roughness)/
+				(4.0*nDotl*nDotv);
+				vec3 outRadiance = PI* clight * nDotl * BRDF + ambientLight*texture2D( aoMap, uVv*textureRepeat).xyz*cdiff;
+				// gamma encode the final value
+				gl_FragColor = vec4(pow( outRadiance, vec3(1.0/2.2)), 1.0);
+			}
+		</script>
+		
+		<!-- shader metallo (da scegliere) -->
+
+		<script type="text/x-glsl" id="fragmentOro">
+			varying vec3 vNormal;
+			varying vec3 vPosition;
+			varying vec3 wPosition;
+			varying vec2 uVv;
+			uniform vec3 pointLightPosition; // in world space
+			//uniform vec3 ambientLight;
+			uniform vec3 clight;
+			uniform vec3 cspec;
+			uniform vec3 cdiff;
+			precision highp float;
+			precision highp int;
+			uniform samplerCube envMap;
+			//uniform samplerCube IrrEnvMap;
+			uniform float roughness;
+			uniform vec2 normalScale;
+
+			const float PI = 3.14159;
+			#define saturate(a) clamp( a, 0.0, 1.0 )
+
+			float pow2( const in float x ) { return x*x; }
+
+			float getSpecularMIPLevel( const in float blinnShininessExponent, const in int maxMIPLevel ) {
+				float maxMIPLevelScalar = float( maxMIPLevel );
+				float desiredMIPLevel = maxMIPLevelScalar - 0.79248 - 0.5 * log2( pow2( blinnShininessExponent ) + 1.0 );
+				return clamp( desiredMIPLevel, 0.0, maxMIPLevelScalar );
+			}
+
+			float GGXRoughnessToBlinnExponent( const in float ggxRoughness ) {
+				return ( 2.0 / pow2( ggxRoughness + 0.0001 ) - 2.0 );
+			}
+
+			vec3 FSchlick(float lDoth) {
+				return (cspec + (vec3(1.0)-cspec)*pow(1.0 - lDoth,5.0));
+			}
+
+			float DGGX(float nDoth, float alpha) {
+				float alpha2 = alpha*alpha;
+				float d = nDoth*nDoth*(alpha2-1.0)+1.0;
+				return (  alpha2 / (PI*d*d));
+			}
+
+			float G1(float dotProduct, float k) {
+				return (dotProduct / (dotProduct*(1.0-k) + k) );
+			}
+
+			float GSmith(float nDotv, float nDotl) {
+				float k = roughness*roughness;
+				return G1(nDotl,k)*G1(nDotv,k);
+			}
+
+			vec3 inverseTransformDirection( in vec3 dir, in mat4 matrix ) {
+				return normalize( ( vec4( dir, 0.0 ) * matrix ).xyz );
+			}
+
+			vec3 BRDF_Specular_GGX_Environment( vec3 normal, vec3 viewDir, const in vec3 cspec, const in float roughness ) {
+
+				float dotNV = saturate( dot( normal, viewDir ) );
+				const vec4 c0 = vec4( - 1, - 0.0275, - 0.572, 0.022 );
+				const vec4 c1 = vec4( 1, 0.0425, 1.04, - 0.04 );
+				vec4 r = roughness * c0 + c1;
+				float a004 = min( r.x * r.x, exp2( - 9.28 * dotNV ) ) * r.x + r.y;
+				vec2 AB = vec2( -1.04, 1.04 ) * a004 + r.zw;
+				return cspec * AB.x + AB.y;
+
+			}
 
 			void main() {
 				vec4 lPosition = viewMatrix * vec4( pointLightPosition, 1.0 );
 				vec3 l = normalize(lPosition.xyz - vPosition.xyz);
 				vec3 n = normalize( vNormal );  // interpolation destroys normalization, so we have to normalize
-				float nDotl = max(dot( n, l ),0.0);
-				// formula would be:
-				// outRadiance = clight * PI * cdiff/PI * nDotl, the two PI cancel out
-				vec3 outRadiance = clight * nDotl * cdiff;
+				vec3 v = normalize( -vPosition);
+				vec3 h = normalize( v + l);
+				vec3 worldN = inverseTransformDirection( n, viewMatrix );
+				vec3 worldV = cameraPosition - wPosition ;
+				vec3 r = normalize( reflect(-worldV,worldN));
+				// small quantity to prevent divisions by 0
+				float nDotl = max(dot( n, l),0.000001);
+				float lDoth = max(dot( l , h ),0.000001);
+				float nDoth = max(dot( n, h ),0.000001);
+				float vDoth = max(dot( v, h ),0.000001);
+				float nDotv = max(dot( n, v ),0.000001);
+				vec3 fresnel = FSchlick(lDoth);
+
+				float blinnShininessExponent = GGXRoughnessToBlinnExponent(roughness);
+				float specularMIPLevel = getSpecularMIPLevel(blinnShininessExponent ,8 );
+
+				vec3 BRDF = (vec3(1.0)-fresnel)*cdiff/PI + fresnel*GSmith(nDotv,nDotl)*DGGX(nDoth,roughness*roughness)/
+				(4.0*nDotl*nDotv);
+				vec3 envLight = textureCubeLodEXT( envMap, vec3(-r.x, r.yz), specularMIPLevel ).rgb;
+				envLight = pow(envLight, vec3(2.2));
+				vec3 outRadiance = PI* clight * nDotl * BRDF+ envLight*BRDF_Specular_GGX_Environment(n, v, cspec, roughness);
 				// gamma encode the final value
 				gl_FragColor = vec4(pow( outRadiance, vec3(1.0/2.2)), 1.0);
 			}
-		</script>
+		</script>		
 		
 		<!-- scena three.js -->
 
@@ -80,20 +259,71 @@
 			// controllo che il browser supporti WebGL
 			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();  // se non lo supporta invio un messaggio
 			
-			// variabili globali
+			// VARIABILI GLOBALI
 			var container, stats, controls;
 			var camera, scene, renderer;
 			
-			// uniforms da passare agli shader (lucePuntuale)
-			var uniforms = {
-						cdiff:	{ type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) }, // TODO prova
+			// CUBEMAP DA TEXTURE
+			var loader = new THREE.CubeTextureLoader(); // TODO se non serve non va caricata -> mettere un controllo
+			loader.setPath( 'FishermansBastion/' );
+			var textureCube = loader.load( [
+				'posx.jpg', 'negx.jpg',
+				'posy.jpg', 'negy.jpg',
+				'posz.jpg', 'negz.jpg'
+			] );
+			textureCube.minFilter = THREE.LinearMipMapLinearFilter;
+			
+			// TEXTURE DA PASSARE AGLI SHADER
+			var diffuseMapPietra = new THREE.TextureLoader().load("map_4096/Base_Color_4096.png");
+			diffuseMapPietra.needsUpdate = true;
+			var specularMapPietra = new THREE.TextureLoader().load("map_4096/Specular_4096.png");
+			specularMapPietra.needsUpdate = true;
+			var roughnessMapPietra = new THREE.TextureLoader().load("map_4096/Roughness_4096.png");
+			roughnessMapPietra.needsUpdate = true;
+			var normalMapPietra = new THREE.TextureLoader().load("map_4096/Normal_4096.png");
+			normalMapPietra.needsUpdate = true;
+			var aoMapPietra = new THREE.TextureLoader().load("map_4096/Ambient_Occlusion_4096.png");
+			aoMapPietra.needsUpdate = true;
+			
+			// UNIFORMS DA PASSARE AGLI SHADER
+			
+			// uniform per il materiale pietra
+			var uniformsPietra = {
 						pointLightPosition:	{ type: "v3", value: new THREE.Vector3() },
 						clight:	{ type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) }, // TODO prova
+						ambientLight: { type: "v3", value: new THREE.Vector3(0.3, 0.3, 0.3) },
+						normalScale: { type: "v2", value: new THREE.Vector2(1,1) },
+						textureRepeat: { type: "v2", value: new THREE.Vector2(0,0) },
+						specularMap: {type: "t", value: specularMapPietra },
+						diffuseMap: {type: "t", value: diffuseMapPietra },
+						roughnessMap: {type: "t", value: roughnessMapPietra },
+						normalMap: {type: "t", value: normalMapPietra },
+						aoMap: {type: "t", value: aoMapPietra }
 			};
 			
-			// contenuto degli shader
+			// uniforms per il materiale oro
+			var uniformsOro = {
+						cdiff:	{ type: "v3", value: new THREE.Vector3(0.0, 0.0, 0.0) },
+						pointLightPosition:	{ type: "v3", value: new THREE.Vector3() },
+						clight:	{ type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) },
+						cspec:	{ type: "v3", value: new THREE.Vector3(1.022, 0.782, 0.344) },
+						roughness:	{ type: "float", value: 0.6 },
+						normalScale:{ type: "v2", value: new THREE.Vector2(1,1) },
+						envMap: { type: "t", value: textureCube }
+			};
+			
+			// vertex shader rimane invariato (per ora)
 			vs = document.getElementById("vertex").textContent;
-			fs = document.getElementById("fragment").textContent;
+			// pietra
+			fsPietra = document.getElementById("fragmentPietra").textContent;
+			// oro
+			fsOro = document.getElementById("fragmentOro").textContent;
+			
+			// per utilizzare questi attributi dei materiali
+			materialExtensions = {
+				derivatives: true, // set to use derivatives
+				shaderTextureLOD: true // set to use shader texture LOD
+			};
 			
 			function init() {
 				container = document.createElement( 'div' );
@@ -118,7 +348,7 @@
 				var lucePuntuale = new THREE.Mesh( new THREE.SphereGeometry( 1, 16, 16), new THREE.MeshBasicMaterial ( {color: 0xffff00, wireframe:true} ) );
 				lucePuntuale.position.set( 10.0, 10.0, -10.0 );
 				// aggiorno il valore della posizione della luce puntuale per passarlo allo shader
-				uniforms.pointLightPosition.value = new THREE.Vector3(lucePuntuale.position.x, lucePuntuale.position.y, lucePuntuale.position.z);
+				uniformsOro.pointLightPosition.value = new THREE.Vector3(lucePuntuale.position.x, lucePuntuale.position.y, lucePuntuale.position.z);
 				scene.add(lucePuntuale);
 				
 				// carico il modello
@@ -127,9 +357,9 @@
 					gltf.scene.traverse( function ( child ) {
 						if ( child.isMesh ) {
 						// applico lo shader ad ogni figlio
-						child.material =  new THREE.ShaderMaterial({ uniforms: uniforms, vertexShader: vs, fragmentShader: fs });
+						child.material =  new THREE.ShaderMaterial({ uniforms: uniformsOro, vertexShader: vs, fragmentShader: fsOro, 
+						extensions: materialExtensions });
 						child.material.needsUpdate = true;
-						console.log(child);  // per vedere i dati dei figli
 						}
 					} );
 					// l'oggetto e' molto grande quindi riduco le sue dimensioni per lavorare con valori "accettabili"

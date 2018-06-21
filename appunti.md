@@ -2,7 +2,7 @@
 
 ## Scena:
 
-* scaricare texture per altri materiali, ad esempio uno in legno (per l'oro non dovrebbe servire)
+* scaricare texture per altri materiali, ad esempio uno in legno
 * aggiungere piano/terreno (?)
 
 ## Pagina html sito:
