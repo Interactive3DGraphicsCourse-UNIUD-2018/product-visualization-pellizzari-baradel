@@ -22,5 +22,10 @@ Applicati alcuni semplici shader al modello
 * Trovate alcune environment map per il modello
 * Inserito lo shader per materiale metallico (primo tentativo con l'oro)
 
+*22 giugno*
+
+* Fix alla pagina html del sito
+* Shader in file separati
+
 ## Fonti
 https://sketchfab.com/
