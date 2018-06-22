@@ -1,6 +1,7 @@
 body {
-    background: linear-gradient(to top left, #B4B7BA, #F0EDE5);
+    background: linear-gradient(to bottom right, #EBDCB2, #F0EDE5);
     height: 100%;
+    color: #662E1C;
 }
 
 .container {
@@ -22,6 +23,11 @@ body {
     min-height: 50px;
     text-align: center;
     font-family: Georgia, serif;
+}
+
+h1, h2 {
+    color: #AF4425;
+    text-align: center;
 }
 
 .logo {
@@ -50,12 +56,14 @@ body {
 
 .inner-container {
     position: absolute;
+    min-width: 900px;
     width: 98%;
     height: 84%;
     left: 1%;
     top:15%;
     font-family: Arial, Helvetica, sans-serif;
-    border: 3px #B4B7BA solid;
+    border: 3px #c9a66b solid;
+    background: #EBDCB2; 
     border-radius: 10px;
 }
 
@@ -78,7 +86,7 @@ iframe {
     height: 780px;
     width: 24%;
     top: 16%;
-    right: 2%;
+    right: 3.5%;
     text-align: left;
 }
 
@@ -107,23 +115,10 @@ table {
 }
 
 
-#legno {
-    margin: 0px 15px;
-    width: 80px;
-    height: 80px;
+#materiale {
+    margin: 5px 7px;
+    width: 90px;
+    height: 90px;
     border-radius: 10px;
-}
-
-#marmo {
-    margin: 0px 15px;
-    width: 80px;
-    height: 80px;
-    border-radius: 10px;
-}
-
-#oro {
-    margin: 0px 15px;
-    width: 80px;
-    height: 80px;
-    border-radius: 10px;
+    border: 2px #c9a66b solid;
 }
