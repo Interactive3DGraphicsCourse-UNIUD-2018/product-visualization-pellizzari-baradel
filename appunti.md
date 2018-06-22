@@ -8,9 +8,9 @@
 
 ## Pagina html sito:
 
-* provare ad inserire il modello
-* aggiungere tabella con i materiali e la funzione onClick su ogni materiale
+* aggiungere la funzione onClick per ogni materiale
 
 ## Varie:
 
 * iniziare README
+
