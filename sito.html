@@ -5,6 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+	<!-- librerie js -->
+	<script src="lib/three.js"></script>
+	<script src="lib/OrbitControls.js"></script>
+	<script src="lib/GLTFLoader.js"></script>
+	<script src="lib/Detector.js"></script>
+	<script src="lib/stats.min.js"></script>
+	<script src="ausiliarie.js"></script>
 </head>
 <body>
     <div class="container">
@@ -21,7 +28,7 @@
 
         <div class="inner-container"></div>
             <div id="canvas">
-                    <iframe src="angelo.html" name="renderFrame"></iframe>  <!--Style provvisorio-->
+					<script src="angelo.js"></script>
             </div>
             <div class="nav-bar">
                 <h2>Modifica Materiali</h2>
@@ -30,9 +37,9 @@
                         <td colspan="3">Materiali</td>
                     </tr>
                     <tr> 
-                        <td><a href="#"><img id="materiale" src="images/wood.jpg" alt="legno"></a></td>
+                        <td><a href="#" onClick="cambiaMateriale('pietra')"><img id="materiale" src="images/wood.jpg" alt="legno"></a></td>
                         <td><a href="#"><img id="materiale" src="images/marble.jpg" alt="marmo"></a></td>
-                        <td><a href="#"><img id="materiale" src="images/gold.jpg" alt="oro"></a></td>
+                        <td><a href="#" onClick="cambiaMateriale('oro')"><img id="materiale" src="images/gold.jpg" alt="oro"></a></td>
                     </tr>
                 </table>
             </div>
