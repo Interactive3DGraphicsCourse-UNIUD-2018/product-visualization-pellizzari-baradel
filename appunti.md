@@ -6,11 +6,9 @@
 * scaricare texture per altri materiali, ad esempio uno in legno
 * aggiungere piano/terreno (?)
 
-## Pagina html sito:
-
-* aggiungere la funzione onClick per ogni materiale
-
 ## Varie:
+
+* spostare ausiliarie.js (e anche angelo.js ?) nella cartella lib
 
 * iniziare README
 
