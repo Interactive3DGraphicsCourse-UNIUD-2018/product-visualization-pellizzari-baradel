@@ -27,5 +27,11 @@ Applicati alcuni semplici shader al modello
 * Fix alla pagina html del sito
 * Shader in file separati
 
+*23 giugno*
+
+* Aggiunta la possibilità di cambiare materiale tramite click sul sito
+* Spostata la scena da file html a file js per gestirla più comodamente
+* Inserito file js esterno con funzioni ausiliarie per gestire il cambio dei materiali
+
 ## Fonti
 https://sketchfab.com/
