@@ -34,4 +34,6 @@ Applicati alcuni semplici shader al modello
 * Inserito file js esterno con funzioni ausiliarie per gestire il cambio dei materiali
 
 ## Fonti
+
 https://sketchfab.com/
+http://www.davideaversa.it/2016/10/three-js-shader-loading-external-file/
