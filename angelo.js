@@ -67,7 +67,7 @@
 				shaderTextureLOD: true // set to use shader texture LOD
 			};
 			
-			// imposto il valore della variabile materialeShader per poi averlo pronto per il modello
+			// imposto il valore della variabile materialeShader per poi averlo pronto quando carico il modello
 			scegliShader();
 			
 			function init() {
@@ -90,7 +90,7 @@
 				controls.maxDistance = 28;		
 				controls.update();
 				
-				// rappresentazione geometrica luce puntuale
+				// rappresentazione geometrica luce puntuale (che ho gia aggiunto agli uniforms)
 				var lucePuntuale = new THREE.Mesh( new THREE.SphereGeometry( 1, 16, 16), new THREE.MeshBasicMaterial ( {color: 0xffff00, wireframe:true} ) );
 				lucePuntuale.position.set( 10.0, 10.0, -10.0 );
 				scene.add(lucePuntuale); // luce sara il figlio in posizione 0 della scena (primo inserito)
@@ -126,14 +126,12 @@
 					gltf.scene.scale.multiplyScalar( 0.01 );
 					gltf.scene.position.set(0,0,0);
 					scene.add( gltf.scene );
-					console.log(scene.children);
 				} );
 			}
 			
 			function rimuoviModello(){
 				if(scene.children.length > 1){
-					scene.remove(scene.children[1]);
-					//scene.remove(scene.getObjectByName("OSG_Scene"));
+					scene.remove(scene.children[1]); // rimuovo il modello che nel vettore dei figli della scena si trova in posizione 1
 				}
 			}
 			
