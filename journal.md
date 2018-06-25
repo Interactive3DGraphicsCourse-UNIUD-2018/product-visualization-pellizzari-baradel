@@ -33,6 +33,20 @@ Applicati alcuni semplici shader al modello
 * Spostata la scena da file html a file js per gestirla più comodamente
 * Inserito file js esterno con funzioni ausiliarie per gestire il cambio dei materiali
 
+## Difficoltà incontrate
+
+* Gestire gli shader in file separati
+* Gestire il cambiamento dei materiali del modello tramite "click" sul logo del materiale sulla pagina html
+
+## Browser utilizzati per i test
+
+* Chrome
+* Firefox
+
+## Altri software utilizzati
+
+* Bitmap2material per generare le varie texture da utilizzare negli shader
+
 ## Fonti
 
 https://sketchfab.com/
