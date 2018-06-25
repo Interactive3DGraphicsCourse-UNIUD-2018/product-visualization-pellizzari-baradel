@@ -49,5 +49,5 @@ Applicati alcuni semplici shader al modello
 
 ## Fonti
 
-https://sketchfab.com/
-http://www.davideaversa.it/2016/10/three-js-shader-loading-external-file/
+* https://sketchfab.com/
+* http://www.davideaversa.it/2016/10/three-js-shader-loading-external-file/
