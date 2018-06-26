@@ -23,15 +23,15 @@
 			textureCube.minFilter = THREE.LinearMipMapLinearFilter;
 			
 			// TEXTURE DA PASSARE AGLI SHADER
-			var diffuseMapPietra = new THREE.TextureLoader().load("map_4096/Base_Color_4096.png");
+			var diffuseMapPietra = new THREE.TextureLoader().load("map_2048/Base_Color_2048.png");
 			diffuseMapPietra.needsUpdate = true;
-			var specularMapPietra = new THREE.TextureLoader().load("map_4096/Specular_4096.png");
+			var specularMapPietra = new THREE.TextureLoader().load("map_2048/Specular_2048.png");
 			specularMapPietra.needsUpdate = true;
-			var roughnessMapPietra = new THREE.TextureLoader().load("map_4096/Roughness_4096.png");
+			var roughnessMapPietra = new THREE.TextureLoader().load("map_2048/Roughness_2048.png");
 			roughnessMapPietra.needsUpdate = true;
-			var normalMapPietra = new THREE.TextureLoader().load("map_4096/Normal_4096.png");
+			var normalMapPietra = new THREE.TextureLoader().load("map_2048/Normal_2048.png");
 			normalMapPietra.needsUpdate = true;
-			var aoMapPietra = new THREE.TextureLoader().load("map_4096/Ambient_Occlusion_4096.png");
+			var aoMapPietra = new THREE.TextureLoader().load("map_2048/Ambient_Occlusion_2048.png");
 			aoMapPietra.needsUpdate = true;
 			
 			// UNIFORMS DA PASSARE AGLI SHADER
