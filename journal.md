@@ -33,6 +33,10 @@ Applicati alcuni semplici shader al modello
 * Spostata la scena da file html a file js per gestirla più comodamente
 * Inserito file js esterno con funzioni ausiliarie per gestire il cambio dei materiali
 
+*27 giugno*
+
+Aggiunta la possibilità di cambiare cubemap dal sito
+
 ## Difficoltà incontrate
 
 * Gestire gli shader in file separati
@@ -51,3 +55,4 @@ Applicati alcuni semplici shader al modello
 
 * https://sketchfab.com/
 * http://www.davideaversa.it/2016/10/three-js-shader-loading-external-file/
+* https://stackoverflow.com/questions/29928973/how-do-you-update-a-uniform-in-three-js
