@@ -3,9 +3,9 @@
 ## Scena:
 
 * come valore per la diffusemap da passare allo shader usiamo la texture Diffuse o la texture Base_Color ?
-* controllare se la texture è applicata correttamente, sembra ci siano degli "errori"
 * scaricare texture per altri materiali, ad esempio uno in legno
 * aggiungere piano/terreno (?)
+* inserire animazione e tasto per accedervi dal sito (?)
 
 ## Varie:
 
