@@ -4,25 +4,43 @@
 			// VARIABILI GLOBALI
 			var container, stats, controls;
 			var camera, scene, renderer;
-			// ASSEGNO UN MATERIALE DI DEFAULT
+			// VARIABILI GLOBALI PER LA GESTIONE DEI MATERIALI E DELLE CUBEMAP
 			var materiale = "oro";
 			var materialeLocale = materiale;
 			var materialeShader;  // variabile globale che corrisponde allo ShaderMaterial che contiene uniforms, vertexshader, fragmentshader ed estensioni
-
-			
+			var cubemap = "colosseo";
+			var cubemapLocale = cubemap;
+			// LARGHEZZA E ALTEZZA DEL CANVAS IN CUI INSERIRE IL MODELLO
 			var larghezza, altezza;
 			
 			// CUBEMAP DA TEXTURE
+			
 			var loader = new THREE.CubeTextureLoader();
-			loader.setPath( 'FishermansBastion/' );
-			var textureCube = loader.load( [
+			loader.setPath( 'Colosseum/' );
+			var textureCube1 = loader.load( [
 				'posx.jpg', 'negx.jpg',
 				'posy.jpg', 'negy.jpg',
 				'posz.jpg', 'negz.jpg'
 			] );
-			textureCube.minFilter = THREE.LinearMipMapLinearFilter;
+			textureCube1.minFilter = THREE.LinearMipMapLinearFilter;
 			
-			// TEXTURE DA PASSARE AGLI SHADER
+			loader.setPath( 'FishermansBastion/' );
+			var textureCube2 = loader.load( [
+				'posx.jpg', 'negx.jpg',
+				'posy.jpg', 'negy.jpg',
+				'posz.jpg', 'negz.jpg'
+			] );
+			textureCube2.minFilter = THREE.LinearMipMapLinearFilter;
+			
+			loader.setPath( 'FortPoint/' );
+			var textureCube3 = loader.load( [
+				'posx.jpg', 'negx.jpg',
+				'posy.jpg', 'negy.jpg',
+				'posz.jpg', 'negz.jpg'
+			] );
+			textureCube3.minFilter = THREE.LinearMipMapLinearFilter;
+			
+			// TEXTURE DA PASSARE ALLO SHADER "fragmentPietra.frag"
 			var diffuseMapPietra = new THREE.TextureLoader().load("map_2048/Base_Color_2048.png");
 			diffuseMapPietra.needsUpdate = true;
 			var specularMapPietra = new THREE.TextureLoader().load("map_2048/Specular_2048.png");
@@ -55,10 +73,20 @@
 						pointLightPosition:	{ type: "v3", value: new THREE.Vector3(10.0, 10.0, -10.0) },
 						clight:	{ type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) },
 						cdiff:	{ type: "v3", value: new THREE.Vector3(0.0, 0.0, 0.0) },
-						cspec:	{ type: "v3", value: new THREE.Vector3(1.022, 0.782, 0.344) },
-						roughness: { type: "float", value: 0.6 },
+						cspec:	{ type: "v3", value: new THREE.Vector3(1.022, 0.782, 0.344) }, // oro
+						//cspec:	{ type: "v3", value: new THREE.Vector3(0.913, 0.922, 0.924) },  // alluminio
+						//cspec:	{ type: "v3", value: new THREE.Vector3(0.972, 0.960, 0.915) },  // argento
+						//cspec:	{ type: "v3", value: new THREE.Vector3(0.664, 0.824, 0.850) }, // zinco
+						//cspec:	{ type: "v3", value: new THREE.Vector3(0.733, 0.697, 0.652) }, // palladio
+						//cspec:	{ type: "v3", value: new THREE.Vector3(0.955, 0.638, 0.538) }, // copper
+						//cspec:	{ type: "v3", value: new THREE.Vector3(0.673, 0.637, 0.585) }, // platino
+						//cspec:	{ type: "v3", value: new THREE.Vector3(0.660, 0.609, 0.526) }, // nickel
+						//cspec:	{ type: "v3", value: new THREE.Vector3(0.562, 0.565, 0.578) }, // ferro
+						//cspec:	{ type: "v3", value: new THREE.Vector3(0.549, 0.556, 0.554) }, // cromo
+						//cspec:	{ type: "v3", value: new THREE.Vector3(0.542, 0.497, 0.449) }, // titanio
+						roughness: { type: "f", value: 0.6 },
 						normalScale: { type: "v2", value: new THREE.Vector2(1,1) },
-						envMap: { type: "t", value: textureCube }
+						envMap: { type: "t", value: textureCube1 }
 			};
 			
 			// per utilizzare questi attributi dei materiali
@@ -142,6 +170,13 @@
 			}
 
 			function animate() {
+				// controllo se devo modifcare la envMap
+				if(cubemap != cubemapLocale){
+					uniformsOro.envMap.value = scegliCubeMap();
+					uniformsOro.envMap.needsUpdate = true;
+					cubemapLocale = cubemap;
+				}
+				// controllo se devo cambiare il materiale
 				if(materiale != materialeLocale){  // se il valore del materiale (globale) e' stato cambiato
 					rimuoviModello();  // rimuovo il modello dalla scena
 					caricaNuovoModello();  // carico un nuovo modello con il materiale aggiornato

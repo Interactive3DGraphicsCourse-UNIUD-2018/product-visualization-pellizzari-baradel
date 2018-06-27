@@ -63,4 +63,27 @@ function scegliShader(){
 			break;
 	} // switch	
 }
-			
+
+// Funzione chiamata dall'evento onClick passandogli il nome della cubemap da impostare alla variabile globale cubemap
+function cambiaCubeMap(nuovaCubeMap){
+	cubemap = nuovaCubeMap;
+}
+
+// In base al valore della variabile globale cubemap restituisco la texture corrispondente
+function scegliCubeMap(){
+	console.log(cubemap);
+	switch(cubemap){
+		case "colosseo":
+			return textureCube1;
+			break;
+		case "fisherman":
+			return textureCube2;
+			break;
+		case "fortpoint":
+			return textureCube3;
+			break;
+		default:
+			break;
+	}
+}
+		
