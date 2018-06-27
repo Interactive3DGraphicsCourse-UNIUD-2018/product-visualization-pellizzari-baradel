@@ -59,7 +59,7 @@
 						pointLightPosition:	{ type: "v3", value: new THREE.Vector3(10.0, 10.0, -10.0) },  // comune
 						clight:	{ type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) },
 						ambientLight: { type: "v3", value: new THREE.Vector3(0.3, 0.3, 0.3) }, // pietra
-						normalScale: { type: "v2", value: new THREE.Vector2(1,1) },
+						normalScale: { type: "v2", value: new THREE.Vector2(0.0,0.0) },
 						textureRepeat: { type: "v2", value: new THREE.Vector2(0,0) },
 						specularMap: {type: "t", value: specularMapPietra },
 						diffuseMap: {type: "t", value: diffuseMapPietra },
