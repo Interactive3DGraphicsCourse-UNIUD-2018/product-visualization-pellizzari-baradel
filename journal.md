@@ -35,7 +35,8 @@ Applicati alcuni semplici shader al modello
 
 *27 giugno*
 
-Aggiunta la possibilità di cambiare cubemap dal sito
+* Aggiunta la possibilità di cambiare cubemap dal sito
+* Sistemata applicazione della texture pietra (errore nel valore del parametro normalScale negli uniform)
 
 ## Difficoltà incontrate
 
