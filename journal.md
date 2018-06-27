@@ -6,7 +6,7 @@ Ricerca di possibili file 3D per lo svolgimento del progetto dal sito SketchFab.
 
 *1 giugno*
 
-Test del corretto funzionamento dei file e del giuto rapporto qualità complessità degli oggetti trovati.
+Test del corretto funzionamento dei file e del giusto rapporto qualità/complessità degli oggetti trovati.
 
 *4 giugno*
 
