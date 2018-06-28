@@ -38,6 +38,11 @@ Applicati alcuni semplici shader al modello
 * Aggiunta la possibilità di cambiare cubemap dal sito
 * Sistemata applicazione della texture pietra (errore nel valore del parametro normalScale negli uniform)
 
+*28 giugno*
+
+* Spostato il file ausiliarie.js nella cartella lib
+* Limitati gli OrbitControls in modo che non si veda la parte inferiore (la base) della scultura
+
 ## Difficoltà incontrate
 
 * Gestire gli shader in file separati
