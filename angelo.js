@@ -41,7 +41,7 @@
 			textureCube3.minFilter = THREE.LinearMipMapLinearFilter;
 			
 			// TEXTURE DA PASSARE ALLO SHADER "fragmentPietra.frag"
-			var diffuseMapPietra = new THREE.TextureLoader().load("map_2048/Base_Color_2048.png");
+			var diffuseMapPietra = new THREE.TextureLoader().load("map_2048/Diffuse_2048.png");
 			diffuseMapPietra.needsUpdate = true;
 			var specularMapPietra = new THREE.TextureLoader().load("map_2048/Specular_2048.png");
 			specularMapPietra.needsUpdate = true;
@@ -107,15 +107,16 @@
 				scene.background = new THREE.Color("white");  // TODO temp
 				
 				// configurazione camera
-				camera = new THREE.PerspectiveCamera(45, larghezza / altezza, 1, 600);
+				camera = new THREE.PerspectiveCamera(45, larghezza / altezza, 1, 400);
 				camera.position.set(0, 3, -20);
 				camera.lookAt(new THREE.Vector3(0,0,0));
 				
 				// aggiungo i controlli
 				controls = new THREE.OrbitControls( camera );
 				// imposto le distanze per lo zoom-in e zoom-out
-				controls.minDistance = 10;
-				controls.maxDistance = 28;		
+				controls.minDistance = 12;
+				controls.maxDistance = 28;
+				controls.maxPolarAngle = Math.PI/2;
 				controls.update();
 				
 				// rappresentazione geometrica luce puntuale (che ho gia aggiunto agli uniforms)
