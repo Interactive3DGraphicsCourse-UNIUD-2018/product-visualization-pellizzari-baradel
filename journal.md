@@ -48,11 +48,13 @@ Applicati alcuni semplici shader al modello
 * Aggiunto piano per mascherare gli errori della base del modello
 * Creata pagina secondaria per la visualizzazione del prodotto con luci dinamiche
 * Aggiunta mini-sezione acquisto
+* Aggiunta irradiance map allo shader pietra.frag
 
 ## Difficoltà incontrate
 
 * Gestire gli shader in file separati
 * Gestire il cambiamento dei materiali del modello tramite "click" sul logo del materiale sulla pagina html
+* Ottenere irradiance map dalle texture
 
 ## Browser utilizzati per i test
 
@@ -62,6 +64,7 @@ Applicati alcuni semplici shader al modello
 ## Altri software utilizzati
 
 * Bitmap2material per generare le varie texture da utilizzare negli shader
+* cmftStudio per ottenere l'irradiance map a partire da un'immagine
 
 ## Fonti
 
