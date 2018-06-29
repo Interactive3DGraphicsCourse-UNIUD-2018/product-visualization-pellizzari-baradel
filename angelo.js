@@ -4,7 +4,7 @@
 			// VARIABILI GLOBALI
 			var container, stats, controls;
 			var camera, scene, renderer;
-			// VARIABILI GLOBALI PER LA GESTIONE DEI MATERIALI E DELLE CUBEMAP
+			// VARIABILI GLOBALI PER LA GESTIONE DEI MATERIALI E DELLE CUBEMAP A RUN-TIME
 			var materiale = "oro";
 			var materialeLocale = materiale;
 			var materialeShader;  // variabile globale che corrisponde allo ShaderMaterial che contiene uniforms, vertexshader, fragmentshader ed estensioni
@@ -23,6 +23,12 @@
 				'posz.jpg', 'negz.jpg'
 			] );
 			textureCube1.minFilter = THREE.LinearMipMapLinearFilter;
+			var textureCubeIrr1 = loader.load( [
+				'posx_iem.jpg', 'negx_iem.jpg',
+				'posy_iem.jpg', 'negy_iem.jpg',
+				'posz_iem.jpg', 'negz_iem.jpg'
+			] );
+			textureCubeIrr1.minFilter = THREE.LinearMipMapLinearFilter;			
 			
 			loader.setPath( 'FishermansBastion/' );
 			var textureCube2 = loader.load( [
@@ -31,6 +37,12 @@
 				'posz.jpg', 'negz.jpg'
 			] );
 			textureCube2.minFilter = THREE.LinearMipMapLinearFilter;
+			var textureCubeIrr2 = loader.load( [
+				'posx_iem.jpg', 'negx_iem.jpg',
+				'posy_iem.jpg', 'negy_iem.jpg',
+				'posz_iem.jpg', 'negz_iem.jpg'
+			] );
+			textureCubeIrr2.minFilter = THREE.LinearMipMapLinearFilter;
 			
 			loader.setPath( 'FortPoint/' );
 			var textureCube3 = loader.load( [
@@ -39,6 +51,12 @@
 				'posz.jpg', 'negz.jpg'
 			] );
 			textureCube3.minFilter = THREE.LinearMipMapLinearFilter;
+			var textureCubeIrr3 = loader.load( [
+				'posx_iem.jpg', 'negx_iem.jpg',
+				'posy_iem.jpg', 'negy_iem.jpg',
+				'posz_iem.jpg', 'negz_iem.jpg'
+			] );
+			textureCubeIrr3.minFilter = THREE.LinearMipMapLinearFilter;
 			
 			// TEXTURE DA PASSARE ALLO SHADER "fragmentPietra.frag"
 			var diffuseMapPietra = new THREE.TextureLoader().load("map_2048/Diffuse_2048.png");
@@ -65,7 +83,9 @@
 						diffuseMap: {type: "t", value: diffuseMapPietra },
 						roughnessMap: {type: "t", value: roughnessMapPietra },
 						normalMap: {type: "t", value: normalMapPietra },
-						aoMap: {type: "t", value: aoMapPietra }
+						aoMap: {type: "t", value: aoMapPietra },
+						envMap: { type: "t", value: textureCube1 },
+						IrrEnvMap: { type: "t", value: textureCubeIrr1 }
 			};
 			
 			// uniforms per il materiale oro
@@ -166,8 +186,8 @@
 			}
 			
 			function rimuoviModello(){
-				if(scene.children.length > 1){
-					scene.remove(scene.children[1]); // rimuovo il modello che nel vettore dei figli della scena si trova in posizione 1
+				if(scene.children.length > 2){ // la luce puntuale, la base dell'oggetto e l'oggetto
+					scene.remove(scene.getObjectByName("OSG_Scene"));
 				}
 			}
 			
@@ -178,17 +198,23 @@
 			}
 
 			function animate() {
-				// controllo se devo modifcare la envMap
+				// controllo se devo modifcare le env map
 				if(cubemap != cubemapLocale){
+					// aggiorno l'environment map
 					uniformsOro.envMap.value = scegliCubeMap();
 					uniformsOro.envMap.needsUpdate = true;
-					cubemapLocale = cubemap;
+					uniformsPietra.envMap.value = scegliCubeMap();
+					uniformsPietra.envMap.needsUpdate = true;
+					// aggiorno l'irradiance map
+					uniformsPietra.IrrEnvMap.value = scegliIrradianceMap();
+					uniformsPietra.IrrEnvMap.needsUpdate = true;
+					cubemapLocale = cubemap; // aggiorno la variabile locale dopo aver applicato le modifiche
 				}
 				// controllo se devo cambiare il materiale
 				if(materiale != materialeLocale){  // se il valore del materiale (globale) e' stato cambiato
 					rimuoviModello();  // rimuovo il modello dalla scena
 					caricaNuovoModello();  // carico un nuovo modello con il materiale aggiornato
-					materialeLocale = materiale;
+					materialeLocale = materiale; // aggiorno la variabile locale dopo aver applicato le modifiche
 				}
 				requestAnimationFrame( animate );
 				renderer.render( scene, camera );
