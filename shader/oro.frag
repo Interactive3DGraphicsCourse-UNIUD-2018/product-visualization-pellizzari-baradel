@@ -10,7 +10,6 @@
 			precision highp float;
 			precision highp int;
 			uniform samplerCube envMap;
-			//uniform samplerCube IrrEnvMap;
 			uniform float roughness;
 			uniform vec2 normalScale;
 
@@ -59,7 +58,6 @@
 			}
 
 			vec3 BRDF_Specular_GGX_Environment( vec3 normal, vec3 viewDir, const in vec3 cspec, const in float roughness ) {
-
 				float dotNV = saturate( dot( normal, viewDir ) );
 				const vec4 c0 = vec4( - 1, - 0.0275, - 0.572, 0.022 );
 				const vec4 c1 = vec4( 1, 0.0425, 1.04, - 0.04 );
@@ -67,7 +65,6 @@
 				float a004 = min( r.x * r.x, exp2( - 9.28 * dotNV ) ) * r.x + r.y;
 				vec2 AB = vec2( -1.04, 1.04 ) * a004 + r.zw;
 				return cspec * AB.x + AB.y;
-
 			}
 
 			void main() {
@@ -96,8 +93,8 @@
 				// textureCubeLodEXT ci permette di accedere al MIP level che abbiamo calcolato e derivarne il valore di luminosita
 				vec3 envLight = textureCubeLodEXT( envMap, vec3(-r.x, r.yz), specularMIPLevel ).rgb;
 				envLight = pow(envLight, vec3(2.2));
-				// BRDF_Specular_GGX_Environment usiamo un environment BRDF (invece che microfaccette)
-				vec3 outRadiance = PI* clight * nDotl * BRDF+ envLight*BRDF_Specular_GGX_Environment(n, v, cspec, roughness);
+				// BRDF_Specular_GGX_Environment: usiamo un environment BRDF (invece che microfaccette)
+				vec3 outRadiance = PI * clight * nDotl * BRDF + envLight * BRDF_Specular_GGX_Environment(n, v, cspec, roughness);
 				// gamma encode the final value
 				gl_FragColor = vec4(pow( outRadiance, vec3(1.0/2.2)), 1.0);
 			}
