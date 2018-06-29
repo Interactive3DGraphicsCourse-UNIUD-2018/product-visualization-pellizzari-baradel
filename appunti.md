@@ -10,3 +10,8 @@
 ## Varie:
 
 * iniziare README
+
+## Pagina
+
+* Sistemare i link esteticamente
+* Usare un font decente

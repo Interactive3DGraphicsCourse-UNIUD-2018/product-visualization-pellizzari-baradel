@@ -1,5 +1,5 @@
 body {
-    background: linear-gradient(to bottom right, #EBDCB2, #F0EDE5);
+    background-image: url(images/marble.jpg);
     height: 100%;
     color: #662E1C;
 }
@@ -84,6 +84,11 @@ h1, h2 {
     right: 3.5%;
     text-align: left;
 }
+
+a:link, a:visited {
+    text-decoration: none;
+    
+    }
 
 .under-text {
     position: absolute;

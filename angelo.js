@@ -126,6 +126,13 @@
 				
 				// carico il modello 3D
 				caricaNuovoModello();  // modello sara il figlio in posizione 1 nella scena (secondo inserito)
+
+				// creo un oggetto per nascondere i difetti della base del modello
+				var baseGeometry = new THREE.BoxGeometry(10,1,10); //Misure arbitrarie, che siano sufficientemente elevate
+				var baseMaterial = new THREE.MeshBasicMaterial( {color: 0xFFFFFF}); //TEMP dovra' essere trasparente
+				baseAngioletto = new THREE.Mesh(baseGeometry, baseMaterial);
+				baseAngioletto.position.y = -5;
+			    scene.add(baseAngioletto);
 				
 				// configuro il renderer
 				renderer = new THREE.WebGLRenderer( { antialias: true } );

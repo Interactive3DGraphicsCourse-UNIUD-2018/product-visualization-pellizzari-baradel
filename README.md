@@ -1,5 +1,15 @@
 # ProductVisualization
 
+## Progetto a cura di Pellizzari Luca e Baradel Luca
+
+### Idea Generale
+
+Lo scopo del progetto è creare un sito sperimentale di visualizzazione di un ipotetico prodotto, di tale prodotto sarà la visualizzazione in un canvas tramite l'utilizzo di Three.js e la possibilità, attraverso comandi situati nella pagina del browser, di modificare la scena e i materiali dell'oggetto visualizzato.
+Si è pensato di utilizzare una statuina di un angioletto come soggetto del progetto. La scelta è stata fatta in quanto una statuina di angioletto è un oggetto semplice ma che può essere presentato in molti modi e in materiali differenti, pertanto si prestava esattamente alle nostre richeste.
+
+### Realizzazione
+
+
 ![Image from Ford Configurator, developed in three.js](images/ford-configurator.jpg)
 
 READ CAREFULLY this document BEFORE you start!

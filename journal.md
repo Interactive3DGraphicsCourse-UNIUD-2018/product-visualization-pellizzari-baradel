@@ -43,6 +43,12 @@ Applicati alcuni semplici shader al modello
 * Spostato il file ausiliarie.js nella cartella lib
 * Limitati gli OrbitControls in modo che non si veda la parte inferiore (la base) della scultura
 
+*29 giugno*
+
+* Aggiunto piano per mascherare gli errori della base del modello
+* Creata pagina secondaria per la visualizzazione del prodotto con luci dinamiche
+* Aggiunta mini-sezione acquisto
+
 ## Difficoltà incontrate
 
 * Gestire gli shader in file separati
