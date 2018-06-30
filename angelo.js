@@ -191,6 +191,29 @@
 				}
 			}
 			
+			function aggiornaCubeMap(){
+				if(cubemap != cubemapLocale){
+					// aggiorno l'environment map di entrambi gli uniforms
+					uniformsOro.envMap.value = scegliCubeMap();
+					uniformsOro.envMap.needsUpdate = true;
+					uniformsPietra.envMap.value = scegliCubeMap();
+					uniformsPietra.envMap.needsUpdate = true;
+					// aggiorno l'irradiance map
+					uniformsPietra.IrrEnvMap.value = scegliIrradianceMap();
+					uniformsPietra.IrrEnvMap.needsUpdate = true;
+					// aggiorno la variabile locale dopo aver applicato le modifiche
+					cubemapLocale = cubemap;
+				}
+			}
+			
+			function aggiornaMateriale(){
+				if(materiale != materialeLocale){  // se il valore del materiale (globale) e' stato cambiato
+					rimuoviModello();  // rimuovo il modello dalla scena
+					caricaNuovoModello();  // carico un nuovo modello con il materiale aggiornato
+					materialeLocale = materiale; // aggiorno la variabile locale dopo aver applicato le modifiche
+				}
+			}
+			
 			function onWindowResize() {
 				camera.aspect = larghezza / altezza;
 				camera.updateProjectionMatrix();
@@ -199,23 +222,10 @@
 
 			function animate() {
 				// controllo se devo modifcare le env map
-				if(cubemap != cubemapLocale){
-					// aggiorno l'environment map
-					uniformsOro.envMap.value = scegliCubeMap();
-					uniformsOro.envMap.needsUpdate = true;
-					uniformsPietra.envMap.value = scegliCubeMap();
-					uniformsPietra.envMap.needsUpdate = true;
-					// aggiorno l'irradiance map
-					uniformsPietra.IrrEnvMap.value = scegliIrradianceMap();
-					uniformsPietra.IrrEnvMap.needsUpdate = true;
-					cubemapLocale = cubemap; // aggiorno la variabile locale dopo aver applicato le modifiche
-				}
+				aggiornaCubeMap();
 				// controllo se devo cambiare il materiale
-				if(materiale != materialeLocale){  // se il valore del materiale (globale) e' stato cambiato
-					rimuoviModello();  // rimuovo il modello dalla scena
-					caricaNuovoModello();  // carico un nuovo modello con il materiale aggiornato
-					materialeLocale = materiale; // aggiorno la variabile locale dopo aver applicato le modifiche
-				}
+				aggiornaMateriale();
+				
 				requestAnimationFrame( animate );
 				renderer.render( scene, camera );
 				stats.update();
