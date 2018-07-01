@@ -56,6 +56,10 @@ Applicati alcuni semplici shader al modello
 * Inserito nuovo shader per la scena
 * Fix agli altri shader
 
+*1 luglio*
+
+* Aggiunta la possibilità di accendere e spegnere le luci durante l'animazione presente sul sito 
+
 ## Difficoltà incontrate
 
 * Gestire gli shader in file separati
@@ -70,7 +74,7 @@ Applicati alcuni semplici shader al modello
 ## Altri software utilizzati
 
 * Bitmap2material per generare le varie texture da utilizzare negli shader
-* cmftStudio per ottenere l'irradiance map a partire da un'immagine
+* cmftStudio per ottenere l'irradiance map a partire da una cubemap
 
 ## Fonti
 
