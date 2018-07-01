@@ -108,8 +108,8 @@
 				cdiff = pow( cdiff, vec3(2.2));
 				cspec = pow( cspec, vec3(2.2));
 				roughness = texture2D( roughnessMap, uVv*textureRepeat).r; // no need to linearize roughness map
-				roughness *= 5.0;
-				cspec *= 0.1;
+				roughness *= 5.0; // TODO
+				cspec *= 0.1; // TODO
 				vec3 fresnel = FSchlick(lDoth);
 				
 				vec3 irradiance = textureCube( IrrEnvMap, worldN).rgb;

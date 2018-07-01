@@ -4,8 +4,8 @@
 			varying vec2 uVv;
 			uniform vec3 pointLightPosition; // in world space
 			uniform vec3 pointLightPosition2; // in world space
-			//uniform vec3 ambientLight;
 			uniform vec3 clight;
+			uniform vec3 clight2;
 			uniform vec3 cspec;
 			uniform vec3 cdiff;
 			precision highp float;
@@ -83,12 +83,12 @@
 				// small quantity to prevent divisions by 0
 				float nDotl = max(dot( n, l),0.000001);
 				float lDoth = max(dot( l , h ),0.000001);
-				float nDoth = max(dot( n, h ),0.000001); // TODO seg
-				float vDoth = max(dot( v, h ),0.000001); // TODO seg
+				float nDoth = max(dot( n, h ),0.000001);
+				//float vDoth = max(dot( v, h ),0.000001);
 				float nDotl2 = max(dot( n, l2),0.000001); // seconda luce
 				float lDoth2 = max(dot( l2 , h2 ),0.000001); // seconda luce
 				float nDoth2 = max(dot( n, h2 ),0.000001); // seconda luce
-				float vDoth2 = max(dot( v, h2 ),0.000001); // seconda luce
+				//float vDoth2 = max(dot( v, h2 ),0.000001); // seconda luce
 				float nDotv = max(dot( n, v ),0.000001);
 				vec3 fresnel = FSchlick(lDoth);
 				vec3 fresnel2 = FSchlick(lDoth2); // seconda luce
@@ -96,7 +96,7 @@
 				float blinnShininessExponent = GGXRoughnessToBlinnExponent(roughness);
 				float specularMIPLevel = getSpecularMIPLevel(blinnShininessExponent ,8 );
 
-				// per rispettare la conservazione dell'energia moltiplico il termine diffusivo (cdiff/PI) per (1 - Fresnel)
+				// Per rispettare la conservazione dell'energia moltiplico il termine diffusivo (cdiff/PI) per (1 - Fresnel)
 				// prima luce
 				vec3 BRDF = (vec3(1.0)-fresnel)*cdiff/PI + fresnel*GSmith(nDotv,nDotl)*DGGX(nDoth,roughness*roughness)/
 				(4.0*nDotl*nDotv);
@@ -107,7 +107,7 @@
 				vec3 envLight = textureCubeLodEXT( envMap, vec3(-r.x, r.yz), specularMIPLevel ).rgb;
 				envLight = pow(envLight, vec3(2.2));
 				// BRDF_Specular_GGX_Environment: usiamo un environment BRDF (invece che microfaccette)
-				vec3 outRadiance = (PI * clight * nDotl * BRDF) + (PI * clight * nDotl2 * BRDF2) + envLight * BRDF_Specular_GGX_Environment(n, v, cspec, roughness);
+				vec3 outRadiance = (PI * clight * nDotl * BRDF) + (PI * clight2 * nDotl2 * BRDF2) + envLight * BRDF_Specular_GGX_Environment(n, v, cspec, roughness);
 				// gamma encode the final value
 				gl_FragColor = vec4(pow( outRadiance, vec3(1.0/2.2)), 1.0);
 			}
