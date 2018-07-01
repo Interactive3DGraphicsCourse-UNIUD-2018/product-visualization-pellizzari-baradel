@@ -105,7 +105,7 @@
 						//cspec:	{ type: "v3", value: new THREE.Vector3(0.549, 0.556, 0.554) }, // cromo
 						//cspec:	{ type: "v3", value: new THREE.Vector3(0.542, 0.497, 0.449) }, // titanio
 						roughness: { type: "f", value: 0.6 },
-						normalScale: { type: "v2", value: new THREE.Vector2(1,1) },
+						normalScale: { type: "v2", value: new THREE.Vector2(1,1) }, // TODO provare 0.0,0.0
 						envMap: { type: "t", value: textureCube1 }
 			};
 			

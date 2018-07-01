@@ -5,13 +5,31 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();  // se non lo supporta in
 var container, stats, controls;
 var camera, scene, renderer;
 // VARIABILI GLOBALI PER LA GESTIONE DEI MATERIALI E DELLE CUBEMAP
-var materiale = "oro";
+var materiale = "dinamico";
 var materialeLocale = materiale;
 var materialeShader;  // variabile globale che corrisponde allo ShaderMaterial che contiene uniforms, vertexshader, fragmentshader ed estensioni
 var cubemap = "colosseo";
 var cubemapLocale = cubemap;
 // LARGHEZZA E ALTEZZA DEL CANVAS IN CUI INSERIRE IL MODELLO
 var larghezza, altezza;
+// VARIABILI PER LA MODIFICA DELLA DINAMICITA DELLA SCENA
+var stato = 0;
+var rotazioneAngelo = true;
+var angeloCaricato = false;
+var luceMov = true;
+var luceMov2 = true;
+var angiolettoMov = true;
+
+    // rappresentazione geometrica luci puntuali (da aggiungere agli uniforms la seconda)
+    angoloLuce = Math.PI;
+    angoloLuce2 = 0;
+    lucePuntuale = new THREE.Mesh( new THREE.SphereGeometry( 1, 16, 16), new THREE.MeshBasicMaterial ( {color: 0xffff00, wireframe:true} ) );
+    lucePuntuale2 = new THREE.Mesh( new THREE.SphereGeometry (1, 16, 16), new THREE.MeshBasicMaterial ( {color: 0xffff00, wireframe:true} ) );
+    lucePuntuale.position.set( 7.5, 10.0, 0 );
+    lucePuntuale2.position.set (10, 7, 0);
+
+    state = 0; // indica se le luci stanno salendo o scendendo nell'animazione 0 scendono, 1 salgono
+    state2 = 0;
 
 // CUBEMAP DA TEXTURE
 
@@ -40,51 +58,27 @@ var textureCube3 = loader.load( [
 ] );
 textureCube3.minFilter = THREE.LinearMipMapLinearFilter;
 
-// TEXTURE DA PASSARE ALLO SHADER "fragmentPietra.frag"
-var diffuseMapPietra = new THREE.TextureLoader().load("map_2048/Diffuse_2048.png");
-diffuseMapPietra.needsUpdate = true;
-var specularMapPietra = new THREE.TextureLoader().load("map_2048/Specular_2048.png");
-specularMapPietra.needsUpdate = true;
-var roughnessMapPietra = new THREE.TextureLoader().load("map_2048/Roughness_2048.png");
-roughnessMapPietra.needsUpdate = true;
-var normalMapPietra = new THREE.TextureLoader().load("map_2048/Normal_2048.png");
-normalMapPietra.needsUpdate = true;
-var aoMapPietra = new THREE.TextureLoader().load("map_2048/Ambient_Occlusion_2048.png");
-aoMapPietra.needsUpdate = true;
 
 // UNIFORMS DA PASSARE AGLI SHADER
 
-// uniform per il materiale pietra (da texture)
-var uniformsPietra = {
-            //pointLightPosition:	{ type: "v3", value: new THREE.Vector3(10.0, 10.0, -10.0) },  // comune
-            clight:	{ type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) },
-            ambientLight: { type: "v3", value: new THREE.Vector3(0.3, 0.3, 0.3) }, // pietra
-            normalScale: { type: "v2", value: new THREE.Vector2(0.0,0.0) },
-            textureRepeat: { type: "v2", value: new THREE.Vector2(0,0) },
-            specularMap: {type: "t", value: specularMapPietra },
-            diffuseMap: {type: "t", value: diffuseMapPietra },
-            roughnessMap: {type: "t", value: roughnessMapPietra },
-            normalMap: {type: "t", value: normalMapPietra },
-            aoMap: {type: "t", value: aoMapPietra }
-};
-
 // uniforms per il materiale oro
-var uniformsOro = {
-            //pointLightPosition:	{ type: "v3", value: new THREE.Vector3(10.0, 10.0, -10.0) },
-            //clight:	{ type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) },
+var uniformsDinamico = {
+            pointLightPosition:	{ type: "v3", value: new THREE.Vector3() },
+            pointLightPosition2:	{ type: "v3", value: new THREE.Vector3() },
+            clight:	{ type: "v3", value: new THREE.Vector3(0.0, 2.0, 2.0) },
             cdiff:	{ type: "v3", value: new THREE.Vector3(0.0, 0.0, 0.0) },
-            cspec:	{ type: "v3", value: new THREE.Vector3(1.022, 0.782, 0.344) }, // oro
+            //cspec:	{ type: "v3", value: new THREE.Vector3(1.022, 0.782, 0.344) }, // oro
             //cspec:	{ type: "v3", value: new THREE.Vector3(0.913, 0.922, 0.924) },  // alluminio
             //cspec:	{ type: "v3", value: new THREE.Vector3(0.972, 0.960, 0.915) },  // argento
             //cspec:	{ type: "v3", value: new THREE.Vector3(0.664, 0.824, 0.850) }, // zinco
             //cspec:	{ type: "v3", value: new THREE.Vector3(0.733, 0.697, 0.652) }, // palladio
-            //cspec:	{ type: "v3", value: new THREE.Vector3(0.955, 0.638, 0.538) }, // copper
+            cspec:	{ type: "v3", value: new THREE.Vector3(0.955, 0.638, 0.538) }, // copper
             //cspec:	{ type: "v3", value: new THREE.Vector3(0.673, 0.637, 0.585) }, // platino
             //cspec:	{ type: "v3", value: new THREE.Vector3(0.660, 0.609, 0.526) }, // nickel
             //cspec:	{ type: "v3", value: new THREE.Vector3(0.562, 0.565, 0.578) }, // ferro
             //cspec:	{ type: "v3", value: new THREE.Vector3(0.549, 0.556, 0.554) }, // cromo
             //cspec:	{ type: "v3", value: new THREE.Vector3(0.542, 0.497, 0.449) }, // titanio
-            roughness: { type: "f", value: 0.6 },
+            roughness: { type: "f", value: 1.0 },
             normalScale: { type: "v2", value: new THREE.Vector2(1,1) },
             envMap: { type: "t", value: textureCube1 }
 };
@@ -105,6 +99,7 @@ function init() {
     
     scene = new THREE.Scene();
     scene.background = new THREE.Color("white");  // TODO temp
+	    scene.add(lucePuntuale, lucePuntuale2);
     
     // configurazione camera
     camera = new THREE.PerspectiveCamera(45, larghezza / altezza, 1, 400);
@@ -119,20 +114,19 @@ function init() {
     controls.maxPolarAngle = Math.PI/2;
     controls.update();
     
-    // rappresentazione geometrica luce puntuale (che ho gia aggiunto agli uniforms)
-    var lucePuntuale = new THREE.Mesh( new THREE.SphereGeometry( 1, 16, 16), new THREE.MeshBasicMaterial ( {color: 0xffff00, wireframe:true} ) );
-    lucePuntuale.position.set( 10.0, 10.0, -10.0 );
-    scene.add(lucePuntuale); // luce sara il figlio in posizione 0 della scena (primo inserito)
+
     
     // carico il modello 3D
+    pivotAngelo = new THREE.Object3D();
     caricaNuovoModello();  // modello sara il figlio in posizione 1 nella scena (secondo inserito)
+    scene.add(pivotAngelo);
 
     // creo un oggetto per nascondere i difetti della base del modello
     var baseGeometry = new THREE.BoxGeometry(10,1,10); //Misure arbitrarie, che siano sufficientemente elevate
     var baseMaterial = new THREE.MeshBasicMaterial( {color: 0xFFFFFF}); //TEMP dovra' essere trasparente
     baseAngioletto = new THREE.Mesh(baseGeometry, baseMaterial);
     baseAngioletto.position.y = -5;
-    scene.add(baseAngioletto);
+    pivotAngelo.add(baseAngioletto);
     
     // configuro il renderer
     renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -161,14 +155,17 @@ function caricaNuovoModello(){
         // l'oggetto e' molto grande quindi riduco le sue dimensioni per lavorare con valori "accettabili"
         gltf.scene.scale.multiplyScalar( 0.01 );
         gltf.scene.position.set(0,0,0);
-        scene.add( gltf.scene );
+        pivotAngelo.add( gltf.scene );
+        angelo = gltf.scene;
+        angeloCaricato = true;
     } );
 }
 
-function rimuoviModello(){
-    if(scene.children.length > 1){
-        scene.remove(scene.children[1]); // rimuovo il modello che nel vettore dei figli della scena si trova in posizione 1
-    }
+function aggiornaLuci(){
+	uniformsDinamico.pointLightPosition.value = lucePuntuale.position;
+	uniformsDinamico.pointLightPosition.needsUpdate = true;
+	uniformsDinamico.pointLightPosition2.value = lucePuntuale2.position;
+	uniformsDinamico.pointLightPosition2.needsUpdate = true;	
 }
 
 function onWindowResize() {
@@ -178,18 +175,50 @@ function onWindowResize() {
 }
 
 function animate() {
-    // controllo se devo modifcare la envMap
-    if(cubemap != cubemapLocale){
-        uniformsOro.envMap.value = scegliCubeMap();
-        uniformsOro.envMap.needsUpdate = true;
-        cubemapLocale = cubemap;
+	
+	aggiornaLuci();
+    
+    if(luceMov){
+        lucePuntuale.position.x = 7.5*Math.cos(angoloLuce);
+        lucePuntuale.position.z = -7.5*Math.sin(angoloLuce);
+        angoloLuce += 0.5 * Math.PI/180;
+        if(state == 0) {
+            if(lucePuntuale.position.y >= -1){
+                lucePuntuale.position.y -= 0.015;
+            }else{
+                state = 1;
+            }
+        }else{
+            if(lucePuntuale.position.y <= 13) {
+                lucePuntuale.position.y += 0.015;
+            }else{
+                state = 0;
+            }
+        }
     }
-    // controllo se devo cambiare il materiale
-    if(materiale != materialeLocale){  // se il valore del materiale (globale) e' stato cambiato
-        rimuoviModello();  // rimuovo il modello dalla scena
-        caricaNuovoModello();  // carico un nuovo modello con il materiale aggiornato
-        materialeLocale = materiale;
+
+    if(luceMov2){
+        angoloLuce2 +=  1.0 * Math.PI/180;
+        lucePuntuale2.position.x = 10*Math.cos(angoloLuce2);
+        lucePuntuale2.position.z = -10*Math.sin(angoloLuce2);
+        if(state2 == 0) {
+            if(lucePuntuale2.position.y >= -1){
+                lucePuntuale2.position.y -= 0.01;
+            }else{
+                state2 = 1;
+            }
+        }else{
+            if(lucePuntuale2.position.y <= 13) {
+                lucePuntuale2.position.y += 0.01;
+            }else{
+                state2 = 0;
+            }
+        }
     }
+    if(angiolettoMov){
+        pivotAngelo.rotateY(0.002);
+    }
+
     requestAnimationFrame( animate );
     renderer.render( scene, camera );
     stats.update();
