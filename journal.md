@@ -50,6 +50,12 @@ Applicati alcuni semplici shader al modello
 * Aggiunta mini-sezione acquisto
 * Aggiunta irradiance map allo shader pietra.frag
 
+*30 giugno*
+
+* Inserita scena dinamica con possibilita di mettere in pausa singolarmente i vari elementi che compongono l'animazione
+* Inserito nuovo shader per la scena
+* Fix agli altri shader
+
 ## Difficoltà incontrate
 
 * Gestire gli shader in file separati
