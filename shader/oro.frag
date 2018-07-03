@@ -29,13 +29,14 @@
 				return ( 2.0 / pow2( ggxRoughness + 0.0001 ) - 2.0 );
 			}
 			
-			// Frazione della luce in ingresso che viene riflessa da una superficie ideale a partire dalla direzione della luce e la normale alla superficie
+			// Frazione della luce in ingresso che viene riflessa da una superficie ideale a partire dalla direzione della luce e
+			// la normale alla superficie, cspec = indice di rifrazione
 			// Buona approssimazione di Fresnel, + semplice da calcolare e con risultati simili
 			vec3 FSchlick(float lDoth) {
 				return (cspec + (vec3(1.0)-cspec)*pow(1.0 - lDoth,5.0));
 			}
 
-			// Concentrazione di microfaccette la cui normale e' in direzione h, e' uno scalare;
+			// Concentrazione di microfaccette la cui normale e' in direzione h (tengo conto solo di queste nei calcoli), e' uno scalare;
 			// alpha = 0 materiale perfettamente liscio, alpha = 1 materiale molto ruvido
 			float DGGX(float nDoth, float alpha) {
 				float alpha2 = alpha*alpha;
@@ -87,13 +88,16 @@
 				float blinnShininessExponent = GGXRoughnessToBlinnExponent(roughness);
 				float specularMIPLevel = getSpecularMIPLevel(blinnShininessExponent ,8 );
 
-				// per rispettare la conservazione dell'energia moltiplico il termine diffusivo (cdiff/PI) per (1 - Fresnel)
+				// La BRDF dipende dalle caratteristiche del materiale: e' la somma fra il termine diffusivo e quello speculare
+				// Per rispettare la conservazione dell'energia moltiplico il termine diffusivo = colore diffuso = albedo = (cdiff/PI) per (1 - Fresnel)
+				// mentre quello speculare = GSmith(nDotv,nDotl)*DGGX(nDoth,roughness*roughness) per Fresnel
 				vec3 BRDF = (vec3(1.0)-fresnel)*cdiff/PI + fresnel*GSmith(nDotv,nDotl)*DGGX(nDoth,roughness*roughness)/
 				(4.0*nDotl*nDotv);  
 				// textureCubeLodEXT ci permette di accedere al MIP level che abbiamo calcolato e derivarne il valore di luminosita
 				vec3 envLight = textureCubeLodEXT( envMap, vec3(-r.x, r.yz), specularMIPLevel ).rgb;
 				envLight = pow(envLight, vec3(2.2));
 				// BRDF_Specular_GGX_Environment: usiamo un environment BRDF (invece che microfaccette)
+				// PI * clight * nDotl * BRDF = radianza uscente con una luce puntuale
 				vec3 outRadiance = PI * clight * nDotl * BRDF + envLight * BRDF_Specular_GGX_Environment(n, v, cspec, roughness);
 				// gamma encode the final value
 				gl_FragColor = vec4(pow( outRadiance, vec3(1.0/2.2)), 1.0);
