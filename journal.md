@@ -58,12 +58,19 @@ Applicati alcuni semplici shader al modello
 
 *1 luglio*
 
-* Aggiunta la possibilità di accendere e spegnere le luci durante l'animazione presente sul sito
+* Aggiunta la possibilità di accendere e spegnere le luci durante l'animazione presente sul sito 
 
 *4 luglio*
 
 * Aggiunto shader per il materiale plastica
 * Rimossa environment map per il materiale pietra, dava un contributo troppo forte; sostituita dalla corrispondente irradiance map
+
+## Situazione Shader:
+
+* oro.frag = luce puntuale, environment map
+* pietra.frag = applicazione texture, luce puntuale, luce ambientale, irradiance map
+* plastica.frag = luce puntuale, irradiance map
+* dinamico.frag = due luci puntuali, environment map
 
 ## Difficoltà incontrate
 
