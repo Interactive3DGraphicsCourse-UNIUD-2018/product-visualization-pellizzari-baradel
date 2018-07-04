@@ -5,7 +5,7 @@
 			var container, stats, controls;
 			var camera, scene, renderer;
 			// VARIABILI GLOBALI PER LA GESTIONE DEI MATERIALI E DELLE CUBEMAP A RUN-TIME
-			var materiale = "oro";
+			var materiale = "pietra";
 			var materialeLocale = materiale;
 			var materialeShader;  // variabile globale che corrisponde allo ShaderMaterial che contiene uniforms, vertexshader, fragmentshader ed estensioni
 			var cubemap = "colosseo";
@@ -58,7 +58,7 @@
 			] );
 			textureCubeIrr3.minFilter = THREE.LinearMipMapLinearFilter;
 			
-			// TEXTURE DA PASSARE ALLO SHADER "fragmentPietra.frag"
+			// TEXTURE DA PASSARE ALLO SHADER "pietra.frag"
 			var diffuseMapPietra = new THREE.TextureLoader().load("map_2048/Diffuse_2048.png");
 			diffuseMapPietra.needsUpdate = true;
 			var specularMapPietra = new THREE.TextureLoader().load("map_2048/Specular_2048.png");
@@ -74,11 +74,11 @@
 			
 			// uniform per il materiale pietra (da texture)
 			var uniformsPietra = {
-						pointLightPosition:	{ type: "v3", value: new THREE.Vector3(10.0, 10.0, -10.0) },  // comune
+						pointLightPosition:	{ type: "v3", value: new THREE.Vector3(10.0, 10.0, -10.0) },
 						clight:	{ type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) },
-						ambientLight: { type: "v3", value: new THREE.Vector3(0.3, 0.3, 0.3) }, // pietra
+						ambientLight: { type: "v3", value: new THREE.Vector3(0.3, 0.3, 0.3) },
 						normalScale: { type: "v2", value: new THREE.Vector2(0.0,0.0) },
-						textureRepeat: { type: "v2", value: new THREE.Vector2(0,0) },
+						textureRepeat: { type: "v2", value: new THREE.Vector2(0.0,0.0) },
 						specularMap: {type: "t", value: specularMapPietra },
 						diffuseMap: {type: "t", value: diffuseMapPietra },
 						roughnessMap: {type: "t", value: roughnessMapPietra },
@@ -88,24 +88,25 @@
 						IrrEnvMap: { type: "t", value: textureCubeIrr1 }
 			};
 			
+			// uniform per il materiale plastica
+			var uniformsPlastica = {
+						pointLightPosition:	{ type: "v3", value: new THREE.Vector3(10.0, 10.0, -10.0) },
+						clight:	{ type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) },
+						cdiff:	{ type: "v3", value: new THREE.Vector3(0.87, 0.55, 0.0) },  // TODO scegliere
+						cspec:	{ type: "v3", value: new THREE.Vector3(0.04, 0.04, 0.04) },
+						roughness: { type: "f", value: 0.83 },
+						normalScale: { type: "v2", value: new THREE.Vector2(0,0) },
+						IrrEnvMap: { type: "t", value: textureCubeIrr1 }
+			};
+			
 			// uniforms per il materiale oro
 			var uniformsOro = {
 						pointLightPosition:	{ type: "v3", value: new THREE.Vector3(10.0, 10.0, -10.0) },
-						clight:	{ type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) },
+						clight:	{ type: "v3", value: new THREE.Vector3(0.8, 0.8, 0.8) },
 						cdiff:	{ type: "v3", value: new THREE.Vector3(0.0, 0.0, 0.0) },
 						cspec:	{ type: "v3", value: new THREE.Vector3(1.022, 0.782, 0.344) }, // oro
-						//cspec:	{ type: "v3", value: new THREE.Vector3(0.913, 0.922, 0.924) },  // alluminio
-						//cspec:	{ type: "v3", value: new THREE.Vector3(0.972, 0.960, 0.915) },  // argento
-						//cspec:	{ type: "v3", value: new THREE.Vector3(0.664, 0.824, 0.850) }, // zinco
-						//cspec:	{ type: "v3", value: new THREE.Vector3(0.733, 0.697, 0.652) }, // palladio
-						//cspec:	{ type: "v3", value: new THREE.Vector3(0.955, 0.638, 0.538) }, // copper
-						//cspec:	{ type: "v3", value: new THREE.Vector3(0.673, 0.637, 0.585) }, // platino
-						//cspec:	{ type: "v3", value: new THREE.Vector3(0.660, 0.609, 0.526) }, // nickel
-						//cspec:	{ type: "v3", value: new THREE.Vector3(0.562, 0.565, 0.578) }, // ferro
-						//cspec:	{ type: "v3", value: new THREE.Vector3(0.549, 0.556, 0.554) }, // cromo
-						//cspec:	{ type: "v3", value: new THREE.Vector3(0.542, 0.497, 0.449) }, // titanio
 						roughness: { type: "f", value: 0.6 },
-						normalScale: { type: "v2", value: new THREE.Vector2(1,1) }, // TODO provare 0.0,0.0
+						normalScale: { type: "v2", value: new THREE.Vector2(0,0) },
 						envMap: { type: "t", value: textureCube1 }
 			};
 			
@@ -124,7 +125,7 @@
 				altezza = document.getElementById('canvas').clientHeight;
 				
 				scene = new THREE.Scene();
-				scene.background = new THREE.Color("white");  // TODO temp
+				scene.background = new THREE.Color("white");
 				
 				// configurazione camera
 				camera = new THREE.PerspectiveCamera(45, larghezza / altezza, 1, 400);
@@ -142,14 +143,14 @@
 				// rappresentazione geometrica luce puntuale (che ho gia aggiunto agli uniforms)
 				var lucePuntuale = new THREE.Mesh( new THREE.SphereGeometry( 1, 16, 16), new THREE.MeshBasicMaterial ( {color: 0xffff00, wireframe:true} ) );
 				lucePuntuale.position.set( 10.0, 10.0, -10.0 );
-				scene.add(lucePuntuale); // luce sara il figlio in posizione 0 della scena (primo inserito)
+				scene.add(lucePuntuale);
 				
 				// carico il modello 3D
-				caricaNuovoModello();  // modello sara il figlio in posizione 1 nella scena (secondo inserito)
+				caricaNuovoModello();
 
 				// creo un oggetto per nascondere i difetti della base del modello
-				var baseGeometry = new THREE.BoxGeometry(10,1,10); //Misure arbitrarie, che siano sufficientemente elevate
-				var baseMaterial = new THREE.MeshBasicMaterial( {color: 0xFFFFFF}); //TEMP dovra' essere trasparente
+				var baseGeometry = new THREE.BoxGeometry(10,1,10); // Misure arbitrarie, che siano sufficientemente elevate
+				var baseMaterial = new THREE.MeshBasicMaterial( {color: 0xFFFFFF}); // TEMP dovra' essere trasparente
 				baseAngioletto = new THREE.Mesh(baseGeometry, baseMaterial);
 				baseAngioletto.position.y = -5;
 			    scene.add(baseAngioletto);
@@ -201,6 +202,8 @@
 					// aggiorno l'irradiance map
 					uniformsPietra.IrrEnvMap.value = scegliIrradianceMap();
 					uniformsPietra.IrrEnvMap.needsUpdate = true;
+					uniformsPlastica.IrrEnvMap.value = scegliIrradianceMap();
+					uniformsPlastica.IrrEnvMap.needsUpdate = true;
 					// aggiorno la variabile locale dopo aver applicato le modifiche
 					cubemapLocale = cubemap;
 				}
