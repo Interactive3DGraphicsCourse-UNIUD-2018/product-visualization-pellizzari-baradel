@@ -58,7 +58,12 @@ Applicati alcuni semplici shader al modello
 
 *1 luglio*
 
-* Aggiunta la possibilità di accendere e spegnere le luci durante l'animazione presente sul sito 
+* Aggiunta la possibilità di accendere e spegnere le luci durante l'animazione presente sul sito
+
+*4 luglio*
+
+* Aggiunto shader per il materiale plastica
+* Rimossa environment map per il materiale pietra, dava un contributo troppo forte; sostituita dalla corrispondente irradiance map
 
 ## Difficoltà incontrate
 
