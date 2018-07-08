@@ -11,11 +11,21 @@ var cubemap = "colosseo";
 // LARGHEZZA E ALTEZZA DEL CANVAS IN CUI INSERIRE IL MODELLO
 var larghezza, altezza;
 // VARIABILI PER LA MODIFICA DELLA DINAMICITA DELLA SCENA
-var luceMov = true; // indica se l'animazione per la luce e' attiva o in pausa
+// Indica se le luci sono accese o spente
+var luceAccesa = true;
+var luceAccesa2 = true;
+// Indica se l'animazione (movimento a spirale attorno all'angelo) per la luce e' attiva o in pausa
+var luceMov = true;
 var luceMov2 = true;
-var angiolettoMov = true;  // indica se l'animazione per l'angelo e' attiva o in pausa
-var statoLuce = 0; // indica se le luci stanno salendo o scendendo nell'animazione 0 scendono, 1 salgono
+// Indica se l'animazione (ruota su se stesso) per l'angelo e' attiva o in pausa
+var angiolettoMov = true; 
+// Indica se le luci stanno salendo o scendendo nell'animazione 0 scendono, 1 salgono
+var statoLuce = 0;
 var statoLuce2 = 0;
+// Variabili per l'animazione dellecomponenti RGB delle due luci
+var tempo = Date.now() / 1000;
+var animaRGB1 = false;
+var animaRGB2 = false;
 
 // CUBEMAP DA TEXTURE
 
@@ -190,6 +200,19 @@ function animaAngioletto(){
     }
 }
 
+function aggiornaRGB(){
+	var tempoCorrente = Date.now() / 1000;
+	if(tempoCorrente > tempo + 2){ // sono passati 2 secondi
+		if(animaRGB1){
+			modificaRGB1();
+		}
+		if(animaRGB2){
+			modificaRGB2();
+		}
+		tempo = tempoCorrente;
+	}
+}
+
 function onWindowResize() {
     camera.aspect = larghezza / altezza;
     camera.updateProjectionMatrix();
@@ -206,6 +229,8 @@ function animate() {
 	animaLuce2();
     
 	animaAngioletto();
+	
+	aggiornaRGB();
 
     stats.update();
 	renderer.render( scene, camera );

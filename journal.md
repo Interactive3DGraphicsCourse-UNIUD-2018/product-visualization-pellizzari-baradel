@@ -65,6 +65,10 @@ Applicati alcuni semplici shader al modello
 * Aggiunto shader per il materiale plastica
 * Rimossa environment map per il materiale pietra, dava un contributo troppo forte; sostituita dalla corrispondente irradiance map
 
+*8 luglio*
+
+* Aggiunta la possibilita di attivare un'animazione che modifica il valore delle componenti RGB delle luci accese nella scena
+
 ## Situazione Shader:
 
 * oro.frag = luce puntuale, environment map
