@@ -2,9 +2,8 @@
 			varying vec3 vNormal;
 			varying vec3 vPosition;
 			varying vec3 wPosition;
-			varying vec2 uVv;
+			//varying vec2 uVv;
 			uniform vec3 pointLightPosition; // in world space
-			//uniform vec3 ambientLight;
 			uniform vec3 clight;
 			uniform vec3 cspec;
 			uniform vec3 cdiff;
@@ -12,8 +11,6 @@
 			precision highp int;
 			uniform samplerCube envMap;
 			uniform float roughness;
-			uniform vec2 normalScale;
-
 			const float PI = 3.14159;
 
 			float pow2( const in float x ) { return x*x; }
@@ -81,7 +78,7 @@
 				float nDotl = max(dot( n, l),0.000001);
 				float lDoth = max(dot( l , h ),0.000001);
 				float nDoth = max(dot( n, h ),0.000001);
-				float vDoth = max(dot( v, h ),0.000001);
+				//float vDoth = max(dot( v, h ),0.000001);
 				float nDotv = max(dot( n, v ),0.000001);
 				vec3 fresnel = FSchlick(lDoth);
 

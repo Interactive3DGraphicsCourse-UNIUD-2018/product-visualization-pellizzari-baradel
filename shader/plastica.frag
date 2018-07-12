@@ -4,7 +4,6 @@
 			varying vec3 wPosition;
 			varying vec2 uVv;
 			uniform vec3 pointLightPosition; // in world space
-			//uniform vec3 ambientLight;
 			uniform vec3 clight;
 			uniform vec3 cspec;
 			uniform vec3 cdiff;
@@ -12,8 +11,6 @@
 			precision highp int;
 			uniform samplerCube IrrEnvMap;
 			uniform float roughness;
-			uniform vec2 normalScale;
-
 			const float PI = 3.14159;
 
 			float pow2( const in float x ) { return x*x; }
