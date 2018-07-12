@@ -152,7 +152,7 @@ function animaLuce1(){
                 statoLuce = 1; // la faccio risalire
             }
         }else{ // la luce deve salire
-            if(lucePuntuale.position.y <= 11) {
+            if(lucePuntuale.position.y <= 9) {
                 lucePuntuale.position.y += 0.015;
             }else{ // se sta andando troppo in alto
                 statoLuce = 0; // la faccio scendere
@@ -173,7 +173,7 @@ function animaLuce2(){
                 statoLuce2 = 1; // la faccio risalire
             }
         }else{ // la luce deve salire
-            if(lucePuntuale2.position.y <= 11) {
+            if(lucePuntuale2.position.y <= 9) {
                 lucePuntuale2.position.y += 0.01;
             }else{ // se sta andando troppo in alto
                 statoLuce2 = 0; // la faccio scendere
