@@ -58,7 +58,7 @@ Applicati alcuni semplici shader al modello
 
 *1 luglio*
 
-* Aggiunta la possibilità di accendere e spegnere le luci durante l'animazione presente sul sito 
+Aggiunta la possibilità di accendere e spegnere le luci durante l'animazione presente sul sito 
 
 *4 luglio*
 
@@ -67,17 +67,21 @@ Applicati alcuni semplici shader al modello
 
 *8 luglio*
 
-* Aggiunta la possibilita di attivare un'animazione che modifica il valore delle componenti RGB delle luci accese nella scena
+Aggiunta la possibilita di attivare un'animazione che modifica il valore delle componenti RGB delle luci accese nella scena
 
 *11 luglio*
 
-* Aggiunti commenti e rimossi dati non utilizzati negli shader
+Aggiunti commenti e rimossi dati non utilizzati negli shader
+
+*12 luglio*
+
+Scelto nuovo shader (fingerprint) e rivisti shader precedenti (modificato calcolo dell'irradianza da texture)
 
 ## Situazione Shader:
 
 * oro.frag = luce puntuale, environment map
 * pietra.frag = applicazione texture, luce puntuale, luce ambientale, irradiance map
-* plastica.frag = luce puntuale, irradiance map
+* fingerprint.frag = applicazione texture, luce puntuale, luce ambientale, irradiance map
 * dinamico.frag = due luci puntuali, environment map
 
 ## Difficoltà incontrate
