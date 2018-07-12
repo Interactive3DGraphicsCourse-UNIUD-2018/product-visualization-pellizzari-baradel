@@ -94,8 +94,7 @@
 						clight:	{ type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) },
 						cdiff:	{ type: "v3", value: new THREE.Vector3(0.87, 0.55, 0.0) },  // TODO scegliere
 						cspec:	{ type: "v3", value: new THREE.Vector3(0.04, 0.04, 0.04) },
-						roughness: { type: "f", value: 0.83 },
-						normalScale: { type: "v2", value: new THREE.Vector2(0,0) },
+						roughness: { type: "f", value: 0.32 },
 						IrrEnvMap: { type: "t", value: textureCubeIrr1 }
 			};
 			
@@ -106,7 +105,6 @@
 						cdiff:	{ type: "v3", value: new THREE.Vector3(0.0, 0.0, 0.0) },
 						cspec:	{ type: "v3", value: new THREE.Vector3(1.022, 0.782, 0.344) }, // oro
 						roughness: { type: "f", value: 0.6 },
-						normalScale: { type: "v2", value: new THREE.Vector2(0,0) },
 						envMap: { type: "t", value: textureCube1 }
 			};
 			

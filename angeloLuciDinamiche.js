@@ -11,7 +11,6 @@ var cubemap = "colosseo";
 // LARGHEZZA E ALTEZZA DEL CANVAS IN CUI INSERIRE IL MODELLO
 var larghezza, altezza;
 // VARIABILI PER LA MODIFICA DELLA DINAMICITA DELLA SCENA
-// Indica se le luci sono accese o spente
 var luceAccesa = true;
 var luceAccesa2 = true;
 // Indica se l'animazione (movimento a spirale attorno all'angelo) per la luce e' attiva o in pausa
@@ -22,8 +21,8 @@ var angiolettoMov = true;
 // Indica se le luci stanno salendo o scendendo nell'animazione 0 scendono, 1 salgono
 var statoLuce = 0;
 var statoLuce2 = 0;
-// Variabili per l'animazione dellecomponenti RGB delle due luci
-var tempo = Date.now() / 1000;
+// Variabili per l'animazione delle componenti RGB delle due luci
+var tempo = Date.now() / 1000;  // tempo in secondi
 var animaRGB1 = false;
 var animaRGB2 = false;
 
@@ -46,19 +45,8 @@ var uniformsDinamico = {
             clight:	{ type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) },
 			clight2:	{ type: "v3", value: new THREE.Vector3(0.8, 0.8, 0.8) },
             cdiff:	{ type: "v3", value: new THREE.Vector3(0.0, 0.0, 0.0) },
-            //cspec:	{ type: "v3", value: new THREE.Vector3(1.022, 0.782, 0.344) }, // oro
-            //cspec:	{ type: "v3", value: new THREE.Vector3(0.913, 0.922, 0.924) },  // alluminio
-            //cspec:	{ type: "v3", value: new THREE.Vector3(0.972, 0.960, 0.915) },  // argento
-            //cspec:	{ type: "v3", value: new THREE.Vector3(0.664, 0.824, 0.850) }, // zinco
-            //cspec:	{ type: "v3", value: new THREE.Vector3(0.733, 0.697, 0.652) }, // palladio
             cspec:	{ type: "v3", value: new THREE.Vector3(0.955, 0.638, 0.538) }, // copper
-            //cspec:	{ type: "v3", value: new THREE.Vector3(0.673, 0.637, 0.585) }, // platino
-            //cspec:	{ type: "v3", value: new THREE.Vector3(0.660, 0.609, 0.526) }, // nickel
-            //cspec:	{ type: "v3", value: new THREE.Vector3(0.562, 0.565, 0.578) }, // ferro
-            //cspec:	{ type: "v3", value: new THREE.Vector3(0.549, 0.556, 0.554) }, // cromo
-            //cspec:	{ type: "v3", value: new THREE.Vector3(0.542, 0.497, 0.449) }, // titanio
-            roughness: { type: "f", value: 0.6 },
-            normalScale: { type: "v2", value: new THREE.Vector2(1,1) },
+            roughness: { type: "f", value: 0.7 },
             envMap: { type: "t", value: textureCube1 }
 };
 
@@ -94,12 +82,12 @@ function init() {
     
     // carico il modello 3D
     pivotAngelo = new THREE.Object3D();
-    caricaNuovoModello();  // modello sara il figlio in posizione 1 nella scena (secondo inserito)
+    caricaNuovoModello();
     scene.add(pivotAngelo);
 
     // creo un oggetto per nascondere i difetti della base del modello
-    var baseGeometry = new THREE.BoxGeometry(10,1,10); //Misure arbitrarie, che siano sufficientemente elevate
-    var baseMaterial = new THREE.MeshBasicMaterial( {color: 0xFFFFFF}); //TEMP dovra' essere trasparente
+    var baseGeometry = new THREE.BoxGeometry(10,1,10); // Misure arbitrarie, che siano sufficientemente elevate
+    var baseMaterial = new THREE.MeshBasicMaterial( {color: 0xFFFFFF}); // TEMP dovra' essere trasparente
     baseAngioletto = new THREE.Mesh(baseGeometry, baseMaterial);
     baseAngioletto.position.y = -5;
     pivotAngelo.add(baseAngioletto);
