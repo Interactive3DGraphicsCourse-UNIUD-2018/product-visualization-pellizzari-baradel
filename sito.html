@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Secondo Progetto</title>
+    <title>Campagna A.C.M.E.</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
@@ -17,12 +17,12 @@
     <div class="container">
 
         <div class="header">
-            <h1>Secondo Progetto</h1>
+            <p class="title">Campagna di conservazione artistica A.C.M.E.</p>
             <div class="logo">
                 <img id="uniud" src="images/Uniud.png" alt="logo università degli studi di Udine"></img>
             </div>
             <div class="description">
-                <p>Modello multi materiale di un angioletto, progettato da Pellizzari Luca e Baradel Luca</p>
+                <p>Partecipa alla conservazione delle meraviglie di queste terre, aiutaci acuqistando un angioletto</p>
             </div>
         </div>
 
@@ -31,36 +31,36 @@
 					<script src="angelo.js"></script>
             </div>
             <div class="nav-bar">
-                <h2>Modifica Materiali</h2>
+                <p class="subtitle">Modifica Materiali</p>
                 <table>
-                    <tr>
-                        <td colspan="3">Materiali</td>
-                    </tr>
                     <tr> 
-                        <td><a href="#" onClick="cambiaMateriale('pietra')"><img id="materiale" src="images/pietra.jpg" alt="pietra"></a></td>
+                        <td><a href="#" onClick="cambiaMateriale('pietra')"><img id="materiale" src="fingerprint_1024/Base_color.png" alt="impronte"></a></td>
                         <td><a href="#" onClick="cambiaMateriale('fingerprint')"><img id="materiale" src="fingerprint_1024/Base_color.png" alt="impronte"></a></td>
                         <td><a href="#" onClick="cambiaMateriale('oro')"><img id="materiale" src="images/gold.jpg" alt="oro"></a></td>
                     </tr>
                 </table>
                 <hr>
-                <h2>Modifica Sfondi</h2>
-                <table>
-                    <tr>
-                        <td colspan="3">Sfondi</td>
-                    </tr>
-                    <tr> 
-                        <td><a href="#" onClick="cambiaCubeMap('colosseo')"><div id="sfondo"><p>Colosseo</p></div></a></td>
-                        <td><a href="#" onClick="cambiaCubeMap('fisherman')"><div id="sfondo"><p>Fisherman<br>Bastion</p></div></a></td>
-                        <td><a href="#" onClick="cambiaCubeMap('fortpoint')"><div id="sfondo"><p>Fort<br>Point</p></div></a></td>
-                    </tr>
-                </table>
-                
-                <a href="sitoLuciDinamiche.html">Prova la scena dinamica</a>
+                <p class="subtitle">Modifica Riflessi</p>
+                <div class="background-table">
+                    <table>
+                        <tr> 
+                            <td><a href="#" onClick="cambiaCubeMap('colosseo')"><img id="materiale" src="Colosseum/posz.jpg" alt="pietra"></a></td>
+                            <td><a href="#" onClick="cambiaCubeMap('fisherman')"><img id="materiale" src="FishermansBastion/negx.jpg" alt="pietra"></a></td>
+                            <td><a href="#" onClick="cambiaCubeMap('fortpoint')"><img id="materiale" src="FortPoint/posx.jpg" alt="pietra"></a></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="link-button">
+                    <a href="sitoLuciDinamiche.html">Prova la scena dinamica</a>
+                </div>
                 <hr>
-                <p><em>Aquistando un angioletto, oltre ad avere un piccolo ricordo, farai anche una donazione per la conservazione degli elementi architettonici storici della zona, ci impegnamo per preservare il nostro passasto.</em></p>
-                <a>Aquista ora un angioletto qui</a>
-                <br>
-                <a href="#"><img src="images/cart_icon.png" alt="carrello della spesa" height="50" width="50"></a>
+                <div class="text">
+                    <p>Aquistando un angioletto, oltre ad avere un piccolo ricordo, farai anche una donazione per la conservazione degli elementi architettonici storici della zona, ci impegnamo per preservare il nostro passasto.</p>
+                </div>
+                <div class="buy-section">
+                    <p>Aquista ora un angioletto</p>
+                    <a href="#"><img src="images/cart_icon.png" alt="carrello della spesa" height="50" width="50"></a>
+                </div>
             </div>
             <div class="under-text">
                 <p><em>

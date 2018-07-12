@@ -1,7 +1,17 @@
+@font-face{
+    font-family: 'Knewave';
+    src: url(fonts/Knewave/Knewave-Regular.ttf);
+}
+
+@font-face{
+    font-family: 'Open Sans';
+    src: url(fonts/Open_Sans/OpenSans-SemiBoldItalic.ttf);
+}
 body {
     background-image: url(images/marble.jpg);
     height: 100%;
     color: #662E1C;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .container {
@@ -22,12 +32,21 @@ body {
     min-width: 500px;
     min-height: 50px;
     text-align: center;
-    font-family: Georgia, serif;
 }
 
-h1, h2 {
+.title {
+    font-family: 'Knewave', cursive;
+    font-size: 50px;
+    margin: 0px;
+}
+
+
+.subtitle {
+    font-family: 'Knewave', cursive;
+    font-size: 30px;
     color: #AF4425;
     text-align: center;
+    margin: 0px;
 }
 
 .logo {
@@ -62,8 +81,8 @@ h1, h2 {
     left: 1%;
     top:15%;
     font-family: Arial, Helvetica, sans-serif;
-    border: 3px #c9a66b solid;
-    background: #EBDCB2; 
+    border: 3px rgb(201, 166, 107) solid;
+    background: rgb(235, 220, 178); 
     border-radius: 10px;
 }
 
@@ -71,7 +90,7 @@ h1, h2 {
     position: absolute;
     width: 70%;
     height: 60%;
-    background-color: #F0EDE5;
+    background-color: rgb(240, 237, 229);
     top: 16%;
     left: 2%;
 }
@@ -85,10 +104,41 @@ h1, h2 {
     text-align: left;
 }
 
+.background-table {
+    width: 110%;
+    height: 15%;
+}
+
+.link-button {
+    width: 110%;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.link-button a:link, a:visited {
+    border: 2px solid rgb(201, 166, 107);
+    padding: 4px;
+    transition: 0.5s;
+    text-decoration: none;
+    font-family: 'Knewave', cursive;
+    color: inherit;
+}
+
+.link-button a:hover, a:active {
+    border: 2px solid rgb(117, 97, 63);
+    padding: 4px;
+    background-color: rgb(185, 155, 102);
+    border-radius: 6px;
+    font-family: 'Knewave', cursive;
+    text-decoration: none;
+}
+
 a:link, a:visited {
     text-decoration: none;
-    
     }
+a:hover, a:active {
+    text-decoration: none;
+}
 
 .under-text {
     position: absolute;
@@ -96,6 +146,7 @@ a:link, a:visited {
     width: 70%;
     top: 78%;
     left: 2%;
+    font-family: Georgia, serif;
 }
 
 ul {
@@ -123,8 +174,33 @@ table {
     border: 2px #c9a66b solid;
 }
 
+#materiale {
+    margin: 5px 7px;
+    width: 90px;
+    height: 90px;
+    border-radius: 10px;
+    border: 2px #c9a66b solid;
+}
+
+#materiale img:hover {
+    margin: 5px 7px;
+    width: 90px;
+    height: 90px;
+    border-radius: 10px;
+    border: 4px #c9a66b solid;
+}
+
 #sfondo {
     margin: 5px 7px;
     width: 90px;
     height: 90px;
+}
+
+.text {
+    padding-top: 0px;
+}
+
+.buy-section {
+    display: block;
+    text-align: center;
 }
