@@ -10,9 +10,7 @@
 			uniform sampler2D specularMap;
 			uniform sampler2D roughnessMap;
 			uniform sampler2D normalMap;
-			uniform sampler2D aoMap;
 			uniform vec2 normalScale;
-			uniform vec2 textureRepeat;
 			vec3 cdiff;
 			vec3 cspec;
 			float roughness;
@@ -88,21 +86,20 @@
 				float vDoth = max(dot( v, h ),0.000001);
 				float nDotv = max(dot( n, v ),0.000001);
 				cdiff = vec3(0.04);
-				cspec = texture2D( specularMap, uVv*textureRepeat ).rgb;
+				cspec = texture2D( specularMap, uVv).rgb;
 				// texture in sRGB, linearize
 				cspec = pow( cspec, vec3(2.2));
-				roughness = texture2D( roughnessMap, uVv*textureRepeat).r; // no need to linearize roughness map
+				roughness = texture2D( roughnessMap, uVv).r; // no need to linearize roughness map
 				vec3 fresnel = FSchlick(lDoth);
 				
 				vec3 irradiance = textureCube( IrrEnvMap, worldN).rgb;
 				// texture in sRGB, linearize
 				irradiance = pow( irradiance, vec3(2.2));
-				//vec3 BRDFIrr = (vec3(1.0)-fresnel)*cdiff/PI;
 
 				// Per rispettare la conservazione dell'energia moltiplico il termine diffusivo (cdiff/PI) per (1 - Fresnel)
 				vec3 BRDF = (vec3(1.0)-fresnel)*cdiff/PI + fresnel*GSmith(nDotv,nDotl)*DGGX(nDoth,roughness*roughness)/
 				(4.0*nDotl*nDotv);
-				vec3 outRadiance = PI * clight * nDotl * BRDF + ambientLight*texture2D( aoMap, uVv*textureRepeat).xyz*cdiff + irradiance*cdiff;
+				vec3 outRadiance = PI * clight * nDotl * BRDF + ambientLight*cdiff + irradiance*cdiff/PI;
 				// gamma encode the final value
 				gl_FragColor = vec4(pow( outRadiance, vec3(1.0/2.2)), 1.0);
 			}

@@ -61,32 +61,26 @@
 			// TEXTURE DA PASSARE AGLI SHADER
 			// pietra.frag
 			var specularMapPietra = new THREE.TextureLoader().load("pietra_2048/Specular.png");
-			specularMapPietra.wrapS = specularMapPietra.wrapT = THREE.RepeatWrapping;
 			specularMapPietra.needsUpdate = true;
 			var roughnessMapPietra = new THREE.TextureLoader().load("pietra_2048/Roughness.png");
-			roughnessMapPietra.wrapS = roughnessMapPietra.wrapT = THREE.RepeatWrapping;
 			roughnessMapPietra.needsUpdate = true;
 			var normalMapPietra = new THREE.TextureLoader().load("pietra_2048/Normal.png");
-			normalMapPietra.wrapS = normalMapPietra.wrapT = THREE.RepeatWrapping;
 			normalMapPietra.needsUpdate = true;
-			var aoMapPietra = new THREE.TextureLoader().load("pietra_2048/Ambient_Occlusion.png");
-			aoMapPietra.wrapS = aoMapPietra.wrapT = THREE.RepeatWrapping;
-			aoMapPietra.needsUpdate = true;
 			// fingerprint.frag
 			var diffuseMapFingerprint = new THREE.TextureLoader().load("fingerprint_1024/Base_Color.png");
 			diffuseMapFingerprint.wrapS = diffuseMapFingerprint.wrapT = THREE.RepeatWrapping;
 			diffuseMapFingerprint.needsUpdate = true;
  			var specularMapFingerprint = new THREE.TextureLoader().load("fingerprint_1024/Specular.png");
-			specularMapFingerprint.wrapS = specularMapFingerprint.wrapT = THREE.MirroredRepeatWrapping;
+			specularMapFingerprint.wrapS = specularMapFingerprint.wrapT = THREE.RepeatWrapping;
 			specularMapFingerprint.needsUpdate = true;
 			var roughnessMapFingerprint = new THREE.TextureLoader().load("fingerprint_1024/Roughness.png");
-			roughnessMapFingerprint.wrapS = roughnessMapFingerprint.wrapT = THREE.MirroredRepeatWrapping;		
+			roughnessMapFingerprint.wrapS = roughnessMapFingerprint.wrapT = THREE.RepeatWrapping;		
 			roughnessMapFingerprint.needsUpdate = true;
 			var normalMapFingerprint = new THREE.TextureLoader().load("fingerprint_1024/Normal.png");
-			normalMapFingerprint.wrapS = normalMapFingerprint.wrapT = THREE.MirroredRepeatWrapping;	
+			normalMapFingerprint.wrapS = normalMapFingerprint.wrapT = THREE.RepeatWrapping;	
 			normalMapFingerprint.needsUpdate = true;
 			var aoMapFingerprint = new THREE.TextureLoader().load("fingerprint_1024/Ambient_Occlusion.png");
-			aoMapFingerprint.wrapS = aoMapFingerprint.wrapT = THREE.MirroredRepeatWrapping;
+			aoMapFingerprint.wrapS = aoMapFingerprint.wrapT = THREE.RepeatWrapping;
 			aoMapFingerprint.needsUpdate = true;
 			
 			// UNIFORMS DA PASSARE AGLI SHADER
@@ -97,11 +91,9 @@
 						clight:	{ type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) },
 						ambientLight: { type: "v3", value: new THREE.Vector3(0.3, 0.3, 0.3) },
 						normalScale: { type: "v2", value: new THREE.Vector2(0.0,0.0) },
-						textureRepeat: { type: "v2", value: new THREE.Vector2(6,100) },
 						specularMap: {type: "t", value: specularMapPietra },
 						roughnessMap: {type: "t", value: roughnessMapPietra },
 						normalMap: {type: "t", value: normalMapPietra },
-						aoMap: {type: "t", value: aoMapPietra },
 						IrrEnvMap: { type: "t", value: textureCubeIrr1 }
 			};
 			
@@ -215,7 +207,7 @@
 			
 			function aggiornaCubeMap(){
 				if(cubemap != cubemapLocale){
-					// aggiorno l'environment map di entrambi gli uniforms
+					// aggiorno l'environment map
 					uniformsOro.envMap.value = scegliCubeMap();
 					uniformsOro.envMap.needsUpdate = true;
 					// aggiorno l'irradiance map

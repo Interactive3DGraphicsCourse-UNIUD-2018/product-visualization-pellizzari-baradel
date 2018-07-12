@@ -95,8 +95,8 @@ function init() {
 	// rappresentazione geometrica luci puntuali
     angoloLuce = Math.PI;
     angoloLuce2 = 0;
-    lucePuntuale = new THREE.Mesh( new THREE.SphereGeometry( 1, 16, 16), new THREE.MeshBasicMaterial ( {color: 0xffff00, wireframe:true} ) );
-    lucePuntuale2 = new THREE.Mesh( new THREE.SphereGeometry (1, 16, 16), new THREE.MeshBasicMaterial ( {color: 0xffff00, wireframe:true} ) );
+    lucePuntuale = new THREE.Mesh( new THREE.SphereGeometry( 0.75, 16, 16), new THREE.MeshBasicMaterial ( {color: 0xffff00, wireframe:true} ) );
+    lucePuntuale2 = new THREE.Mesh( new THREE.SphereGeometry (0.75, 16, 16), new THREE.MeshBasicMaterial ( {color: 0xffff00, wireframe:true} ) );
     lucePuntuale.position.set( 7.5, 10.0, 0 );
     lucePuntuale2.position.set (10, 7, 0);
 	scene.add(lucePuntuale, lucePuntuale2);
@@ -152,7 +152,7 @@ function animaLuce1(){
                 statoLuce = 1; // la faccio risalire
             }
         }else{ // la luce deve salire
-            if(lucePuntuale.position.y <= 13) {
+            if(lucePuntuale.position.y <= 11) {
                 lucePuntuale.position.y += 0.015;
             }else{ // se sta andando troppo in alto
                 statoLuce = 0; // la faccio scendere
@@ -173,7 +173,7 @@ function animaLuce2(){
                 statoLuce2 = 1; // la faccio risalire
             }
         }else{ // la luce deve salire
-            if(lucePuntuale2.position.y <= 13) {
+            if(lucePuntuale2.position.y <= 11) {
                 lucePuntuale2.position.y += 0.01;
             }else{ // se sta andando troppo in alto
                 statoLuce2 = 0; // la faccio scendere
