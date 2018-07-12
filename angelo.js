@@ -60,16 +60,16 @@
 			
 			// TEXTURE DA PASSARE AGLI SHADER
 			// pietra.frag
-			var specularMapPietra = new THREE.TextureLoader().load("pietra_2048/Specular_2048.png");
+			var specularMapPietra = new THREE.TextureLoader().load("pietra_2048/Specular.png");
 			specularMapPietra.wrapS = specularMapPietra.wrapT = THREE.RepeatWrapping;
 			specularMapPietra.needsUpdate = true;
-			var roughnessMapPietra = new THREE.TextureLoader().load("pietra_2048/Roughness_2048.png");
+			var roughnessMapPietra = new THREE.TextureLoader().load("pietra_2048/Roughness.png");
 			roughnessMapPietra.wrapS = roughnessMapPietra.wrapT = THREE.RepeatWrapping;
 			roughnessMapPietra.needsUpdate = true;
-			var normalMapPietra = new THREE.TextureLoader().load("pietra_2048/Normal_2048.png");
+			var normalMapPietra = new THREE.TextureLoader().load("pietra_2048/Normal.png");
 			normalMapPietra.wrapS = normalMapPietra.wrapT = THREE.RepeatWrapping;
 			normalMapPietra.needsUpdate = true;
-			var aoMapPietra = new THREE.TextureLoader().load("pietra_2048/Ambient_Occlusion_2048.png");
+			var aoMapPietra = new THREE.TextureLoader().load("pietra_2048/Ambient_Occlusion.png");
 			aoMapPietra.wrapS = aoMapPietra.wrapT = THREE.RepeatWrapping;
 			aoMapPietra.needsUpdate = true;
 			// fingerprint.frag
