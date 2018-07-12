@@ -69,6 +69,10 @@ Applicati alcuni semplici shader al modello
 
 * Aggiunta la possibilita di attivare un'animazione che modifica il valore delle componenti RGB delle luci accese nella scena
 
+*11 luglio*
+
+* Aggiunti commenti e rimossi dati non utilizzati negli shader
+
 ## Situazione Shader:
 
 * oro.frag = luce puntuale, environment map
