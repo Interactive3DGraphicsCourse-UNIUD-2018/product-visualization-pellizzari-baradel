@@ -10,6 +10,7 @@
 			var materialeShader;  // variabile globale che corrisponde allo ShaderMaterial che contiene uniforms, vertexshader, fragmentshader ed estensioni
 			var cubemap = "colosseo";
 			var cubemapLocale = cubemap;
+			var lucePuntuale2;
 			// LARGHEZZA E ALTEZZA DEL CANVAS IN CUI INSERIRE IL MODELLO
 			var larghezza, altezza;
 			
@@ -61,7 +62,9 @@
 			// TEXTURE DA PASSARE AGLI SHADER
 			// pietra.frag
 			var specularMapPietra = new THREE.TextureLoader().load("pietra_2048/Specular.png");
-			specularMapPietra.needsUpdate = true;
+			specularMapPietra.needsUpdate = true;			
+			var diffuseMapPietra = new THREE.TextureLoader().load("pietra_2048/Diffuse.png");
+			diffuseMapPietra.needsUpdate = true;
 			var roughnessMapPietra = new THREE.TextureLoader().load("pietra_2048/Roughness.png");
 			roughnessMapPietra.needsUpdate = true;
 			var normalMapPietra = new THREE.TextureLoader().load("pietra_2048/Normal.png");
@@ -89,12 +92,14 @@
 			var uniformsPietra = {
 						pointLightPosition:	{ type: "v3", value: new THREE.Vector3(10.0, 10.0, -10.0) },
 						clight:	{ type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) },
+						pointLightPosition2:	{ type: "v3", value: new THREE.Vector3(-10.0, 10.0, 10.0) },
+						clight2:	{ type: "v3", value: new THREE.Vector3(0.5, 0.5, 0.5) },
 						ambientLight: { type: "v3", value: new THREE.Vector3(0.3, 0.3, 0.3) },
 						normalScale: { type: "v2", value: new THREE.Vector2(0.0,0.0) },
 						specularMap: {type: "t", value: specularMapPietra },
+						diffuseMap: {type: "t", value: diffuseMapPietra },
 						roughnessMap: {type: "t", value: roughnessMapPietra },
-						normalMap: {type: "t", value: normalMapPietra },
-						IrrEnvMap: { type: "t", value: textureCubeIrr1 }
+						normalMap: {type: "t", value: normalMapPietra }
 			};
 			
 			// uniform per il materiale fingerprint (da texture)
@@ -103,7 +108,7 @@
 						clight:	{ type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) },
 						ambientLight: { type: "v3", value: new THREE.Vector3(0.2, 0.2, 0.2) },
 						normalScale: { type: "v2", value: new THREE.Vector2(0.0,0.0) },
-						textureRepeat: { type: "v2", value: new THREE.Vector2(8,8) },
+						textureRepeat: { type: "v2", value: new THREE.Vector2(16,16) },
 						specularMap: {type: "t", value: specularMapFingerprint },
 						diffuseMap: {type: "t", value: diffuseMapFingerprint },
 						roughnessMap: {type: "t", value: roughnessMapFingerprint },
@@ -157,6 +162,9 @@
 				var lucePuntuale = new THREE.Mesh( new THREE.SphereGeometry( 1, 16, 16), new THREE.MeshBasicMaterial ( {color: 0xffff00, wireframe:true} ) );
 				lucePuntuale.position.set( 10.0, 10.0, -10.0 );
 				scene.add(lucePuntuale);
+				lucePuntuale2 = new THREE.Mesh( new THREE.SphereGeometry( 0.75, 16, 16), new THREE.MeshBasicMaterial ( {color: 0xffff00, wireframe:true} ) );
+				lucePuntuale2.position.set( -10.0, 10.0, 10.0 );
+				scene.add(lucePuntuale2);
 				
 				// carico il modello 3D
 				caricaNuovoModello();
@@ -196,6 +204,7 @@
 					gltf.scene.scale.multiplyScalar( 0.01 );
 					gltf.scene.position.set(0,0,0);
 					scene.add( gltf.scene );
+					console.log(gltf.scene);
 				} );
 			}
 			
@@ -211,8 +220,6 @@
 					uniformsOro.envMap.value = scegliCubeMap();
 					uniformsOro.envMap.needsUpdate = true;
 					// aggiorno l'irradiance map
-					uniformsPietra.IrrEnvMap.value = scegliIrradianceMap();
-					uniformsPietra.IrrEnvMap.needsUpdate = true;
 					uniformsFingerprint.IrrEnvMap.value = scegliIrradianceMap();
 					uniformsFingerprint.IrrEnvMap.needsUpdate = true;
 					// aggiorno la variabile locale dopo aver applicato le modifiche
@@ -239,6 +246,12 @@
 				aggiornaCubeMap();
 				// controllo se devo cambiare il materiale
 				aggiornaMateriale();
+				// controllo che si veda/non si veda la seconda luce
+				if(materiale != "pietra"){
+					lucePuntuale2.visible = false;
+				}else{
+					lucePuntuale2.visible = true;
+				}
 				
 				requestAnimationFrame( animate );
 				renderer.render( scene, camera );

@@ -4,10 +4,12 @@
 			varying vec3 wPosition;
 			varying vec2 uVv;
 			uniform vec3 pointLightPosition; // in world space
-			uniform vec3 ambientLight;
+			uniform vec3 pointLightPosition2; // in world space
 			uniform vec3 clight;
-			uniform samplerCube IrrEnvMap;
+			uniform vec3 clight2;
+			uniform vec3 ambientLight;
 			uniform sampler2D specularMap;
+			uniform sampler2D diffuseMap;
 			uniform sampler2D roughnessMap;
 			uniform sampler2D normalMap;
 			uniform vec2 normalScale;
@@ -72,34 +74,44 @@
 
 			void main() {
 				vec4 lPosition = viewMatrix * vec4( pointLightPosition, 1.0 );
+				vec4 lPosition2 = viewMatrix * vec4( pointLightPosition2, 1.0 ); // seconda luce
 				vec3 l = normalize(lPosition.xyz - vPosition.xyz);  // direzione da p (pixel per il quale stiamo facendo lo shading) alla luce
+				vec3 l2 = normalize(lPosition2.xyz - vPosition.xyz); // seconda luce
 				vec3 n = perturbNormal2Arb( vPosition, normalize( vNormal )); // normale della superficie di p
 				vec3 v = normalize( -vPosition); // direzione da p alla camera
 				vec3 h = normalize( v + l); // half-way direction fra l e v
+				vec3 h2 = normalize( v + l2); // seconda luce
 				vec3 worldN = inverseTransformDirection( n, viewMatrix );  // la cubemap e' uno sfondo in world space quindi devo accedervi da li
-				vec3 worldV = cameraPosition - wPosition ;
+				vec3 worldV = cameraPosition - wPosition;
 				vec3 r = normalize( reflect(-worldV,worldN)); // r = direzione dal pixel sulla superficie al texel della cubemap
 				// small quantity to prevent divisions by 0
 				float nDotl = max(dot( n, l ),0.000001);
 				float lDoth = max(dot( l, h ),0.000001);
 				float nDoth = max(dot( n, h ),0.000001);
-				float vDoth = max(dot( v, h ),0.000001);
+				float nDotl2 = max(dot( n, l2),0.000001); // seconda luce
+				float lDoth2 = max(dot( l2 , h2 ),0.000001); // seconda luce
+				float nDoth2 = max(dot( n, h2 ),0.000001); // seconda luce
 				float nDotv = max(dot( n, v ),0.000001);
-				cdiff = vec3(0.04);
-				cspec = texture2D( specularMap, uVv).rgb;
+				
+				cspec = texture2D( specularMap, uVv).rgb;				
+				cdiff = texture2D( diffuseMap, uVv).rgb*0.5;
 				// texture in sRGB, linearize
 				cspec = pow( cspec, vec3(2.2));
+				cdiff = pow(cdiff, vec3(2.2));
 				roughness = texture2D( roughnessMap, uVv).r; // no need to linearize roughness map
-				vec3 fresnel = FSchlick(lDoth);
 				
-				vec3 irradiance = textureCube( IrrEnvMap, worldN).rgb;
-				// texture in sRGB, linearize
-				irradiance = pow( irradiance, vec3(2.2));
+				vec3 fresnel = FSchlick(lDoth);
+				vec3 fresnel2 = FSchlick(lDoth2); // seconda luce
 
 				// Per rispettare la conservazione dell'energia moltiplico il termine diffusivo (cdiff/PI) per (1 - Fresnel)
+				// prima luce
 				vec3 BRDF = (vec3(1.0)-fresnel)*cdiff/PI + fresnel*GSmith(nDotv,nDotl)*DGGX(nDoth,roughness*roughness)/
 				(4.0*nDotl*nDotv);
-				vec3 outRadiance = PI * clight * nDotl * BRDF + ambientLight*cdiff + irradiance*cdiff/PI;
+				// seconda luce
+				vec3 BRDF2 = (vec3(1.0)-fresnel2)*cdiff/PI + fresnel2*GSmith(nDotv,nDotl2)*DGGX(nDoth2,roughness*roughness)/
+				(4.0*nDotl2*nDotv);
+				// Avremmo voluto aggiungere anche il fattore irradiance*cdiff ma produce dei riflessi errati sulla parte posteriore del modello
+				vec3 outRadiance = PI * clight * nDotl * BRDF + PI * clight2 * nDotl2 * BRDF2 + ambientLight*cdiff;
 				// gamma encode the final value
 				gl_FragColor = vec4(pow( outRadiance, vec3(1.0/2.2)), 1.0);
 			}

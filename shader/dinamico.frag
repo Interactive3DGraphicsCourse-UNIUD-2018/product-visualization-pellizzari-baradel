@@ -82,11 +82,9 @@
 				float nDotl = max(dot( n, l),0.000001);
 				float lDoth = max(dot( l , h ),0.000001);
 				float nDoth = max(dot( n, h ),0.000001);
-				//float vDoth = max(dot( v, h ),0.000001);
 				float nDotl2 = max(dot( n, l2),0.000001); // seconda luce
 				float lDoth2 = max(dot( l2 , h2 ),0.000001); // seconda luce
 				float nDoth2 = max(dot( n, h2 ),0.000001); // seconda luce
-				//float vDoth2 = max(dot( v, h2 ),0.000001); // seconda luce
 				float nDotv = max(dot( n, v ),0.000001);
 				vec3 fresnel = FSchlick(lDoth);
 				vec3 fresnel2 = FSchlick(lDoth2); // seconda luce
