@@ -77,6 +77,10 @@ Aggiunti commenti e rimossi dati non utilizzati negli shader
 
 Scelto nuovo shader (fingerprint) e rivisti shader precedenti (modificato calcolo dell'irradianza da texture)
 
+*15 luglio*
+
+Ultime correzioni e testing finale.
+
 ## Situazione Shader:
 
 * oro.frag = luce puntuale, environment map

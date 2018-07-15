@@ -111,7 +111,7 @@ function init() {
     
     // stats
     stats = new Stats();
-    container.appendChild( stats.dom );
+    //container.appendChild( stats.dom );
     
 } // init()
 
