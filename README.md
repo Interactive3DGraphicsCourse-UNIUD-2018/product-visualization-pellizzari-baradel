@@ -51,10 +51,10 @@ Ogni shader è stato gestito in file separati per semplificarne la compresione e
 
 ### Screenshots del progetto
 
- ![Screenshot 1](/Screenshots/Screenshot 1.jpg)
- ![Screenshot 2](/Screenshots/Screenshot 2.jpg)
- ![Screenshot 3](/Screenshots/Screenshot 3.jpg)
- ![Screenshot 4](/Screenshots/Screenshot 4.jpg) 
+ ![Screenshot 1](/Screenshots/Screenshot1.jpg)
+ ![Screenshot 2](/Screenshots/Screenshot2.jpg)
+ ![Screenshot 3](/Screenshots/Screenshot3.jpg)
+ ![Screenshot 4](/Screenshots/Screenshot4.jpg) 
 
 ### Fonti e Software
 
