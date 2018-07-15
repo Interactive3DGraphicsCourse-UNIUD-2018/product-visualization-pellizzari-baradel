@@ -13,17 +13,31 @@ Il progetto è stato realizzato in una pagina web completa, attraverso la quale 
 
 ### Scelte progettuali e svolgimento
 
-Nei vari materiali si è scelto di utilizzare:
+#### Shader
+
+Nella realizzazione di alcuni shader si è scelto di utilizzare:
 * BRDF Lambertiana per il calcolo della riflessione diffusiva.
 * BRDF Specular (Fresnel, Gemoetry, Normal Distribution Function).
 * Environment Map per la riflessione di un ipotetico ambiente esterno.
-* Normal Map per creare un effetto aggiuntivo di rilievo.
-* Irradiance Map ricavata dalla Enviroment Map.
-* Ambient Occlusion (tolta?).
-* Roughness Map per affidare alla texture il calcolo del fattore di roughness.
-* Diffuse Map eventualmente in sostituzione della BRDF Lambertiana.
-* Specular Map eventualmente in sostituzione della BRDF Specular.
+* Shader materiale oro:
+    * Luce puntuale
+    * Environment Map
+* Shader materiale pietra:
+    * Applicazione delle texture
+    * Due luci puntuali
+    * Luce ambientale 
+* Shader materiale fingerprint: 
+    * Applicazione delle texture 
+    * Luce puntuale
+    * Luce ambientale
+    * Irradiance map
+* Shader per la scena dinamica:
+    * Due luci puntuali
+    * Environment map
 
+Ogni shader è stato gestito in file separati per semplificarne la compresione e migliorare l'ordine generale del progetto.
+
+#### Svolgimento
 
 1. Per lo sviluppo del progetto si è proceduto innanzitutto con la ricerca del modello che ha portato alla scelta dell'angioletto dal sito https://sketchfab.com/, e relativa verifica del rispetto delle richieste di progetto.
 
